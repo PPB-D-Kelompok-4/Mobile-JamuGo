@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "880131574846",
+    "project_id": "jamugo-firebase",
+    "storage_bucket": "jamugo-firebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:880131574846:android:0603918248a1436683156f",
+        "android_client_info": {
+          "package_name": "com.example.mobile_jamugo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_VA0L6H2JOCwCnYA1pDzRZ5vB3ggtOOQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
