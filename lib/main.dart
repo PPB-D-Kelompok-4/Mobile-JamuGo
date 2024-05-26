@@ -4,6 +4,7 @@ import 'package:mobile_jamugo/firebase_options.dart';
 import 'package:mobile_jamugo/pages/home_page.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile_jamugo/pages/login_page.dart';
+import 'package:mobile_jamugo/pages/register_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,8 +22,16 @@ class MyApp extends StatelessWidget {
         builder: (context, state) => const LoginPage(),
       ),
       GoRoute(
-          path: '/home',
-        builder: (context,state) => const HomePage(),
+        path: '/home',
+        builder: (context, state) => const HomePage(),
+      ),
+      GoRoute(
+        path: '/login',
+        builder: (context, state) => const LoginPage(),
+      ),
+      GoRoute(
+        path: '/register',
+        builder: (context, state) => const RegisterPage(),
       ),
     ],
   );

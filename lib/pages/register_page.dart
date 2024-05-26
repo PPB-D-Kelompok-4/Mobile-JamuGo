@@ -1,41 +1,34 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mobile_jamugo/main.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:material_text_fields/material_text_fields.dart';
 import "package:material_text_fields/theme/material_text_field_theme.dart";
 import "package:material_text_fields/utils/form_validation.dart";
+import "package:mobile_jamugo/api/auth.dart";
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  bool _passwordVisible = false;
+  final confirmPasswordController = TextEditingController();
 
   @override
   void initState() {
-    _passwordVisible = false;
     super.initState();
   }
 
-  void showErrorSnackbar(BuildContext context, String errorCode) {
-    final snackBar = SnackBar(
-      content: Text('Error: $errorCode'),
-      backgroundColor: Colors.red,
-      duration: const Duration(seconds: 2),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
-
-  void signUserIn() async {
-    final BuildContext currentContext = context;
+  void signUserUp() async {
     showDialog(
-      context: currentContext,
+      context: context,
       builder: (context) {
         return const Center(
           child: CircularProgressIndicator(),
@@ -44,21 +37,32 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
-      );
+      if (passwordController.text == confirmPasswordController.text) {
+        await AuthApi.register(
+          email: emailController.text,
+          password: passwordController.text,
+          name: 'Helmi',
+          address: 'Informatika',
+        );
 
-      Navigator.pop(currentContext);
+        GoRouter.of(context).go('/home');
+        print("user registered");
+      } else {
+        print("password don't match");
+      }
+
+      Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
-      Navigator.pop(currentContext);
-      showErrorSnackbar(currentContext, e.code);
+      Navigator.pop(context);
+
+      print("auth error: " + e.code);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Stack(
@@ -67,7 +71,7 @@ class _LoginPageState extends State<LoginPage> {
                 child: Padding(
                   padding: const EdgeInsets.only(top: 60.0, left: 22),
                   child: Text(
-                    'Sign-in.',
+                    'Sign-up.',
                     style: TextStyle(
                         fontSize: 35,
                         color: Colors.indigo[900],
@@ -111,20 +115,7 @@ class _LoginPageState extends State<LoginPage> {
                         textInputAction: TextInputAction.done,
                         controller: passwordController,
                         validator: FormValidation.requiredTextField,
-                        obscureText: !_passwordVisible,
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            !_passwordVisible
-                                ? Icons.visibility
-                                : Icons.visibility_off,
-                            color: Colors.grey[500],
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _passwordVisible = !_passwordVisible;
-                            });
-                          },
-                        ),
+                        obscureText: true,
                         theme: BorderlessTextTheme(
                           radius: 0,
                           errorStyle: const TextStyle(
@@ -143,23 +134,33 @@ class _LoginPageState extends State<LoginPage> {
                     const SizedBox(height: 20),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Text(
-                            'Forget Password?',
-                            style: TextStyle(
-                                color: Colors.indigo[900],
-                                fontWeight: FontWeight.w500),
-                          ),
-                        ],
+                      child: MaterialTextField(
+                        keyboardType: TextInputType.emailAddress,
+                        labelText: "Confirm Password",
+                        textInputAction: TextInputAction.done,
+                        controller: confirmPasswordController,
+                        validator: FormValidation.requiredTextField,
+                        obscureText: true,
+                        theme: BorderlessTextTheme(
+                          radius: 0,
+                          errorStyle: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.red,
+                              fontWeight: FontWeight.w700),
+                          fillColor: Colors.transparent,
+                          enabledColor: Colors.black,
+                          focusedColor: Colors.black,
+                          floatingLabelStyle:
+                              const TextStyle(color: Colors.black),
+                          width: 2,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 40),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 25.0),
                       child: MaterialButton(
-                        onPressed: signUserIn,
+                        onPressed: signUserUp,
                         minWidth: MediaQuery.of(context).size.width,
                         height: 55,
                         elevation: 2,
@@ -169,7 +170,7 @@ class _LoginPageState extends State<LoginPage> {
                           borderRadius: BorderRadius.circular(18),
                         ),
                         child: const Text(
-                          "Sign in",
+                          "Sign up",
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -179,16 +180,16 @@ class _LoginPageState extends State<LoginPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "Don/'t have an account?",
+                          "Already have an account?",
                           style: TextStyle(color: Colors.grey[700]),
                         ),
                         const SizedBox(width: 2),
                         GestureDetector(
                           onTap: () {
-                            GoRouter.of(context).go('/register');
+                            GoRouter.of(context).go('/login');
                           },
                           child: Text(
-                            'Register',
+                            'Login',
                             style: TextStyle(
                               color: Colors.indigo[900],
                               fontWeight: FontWeight.bold,
