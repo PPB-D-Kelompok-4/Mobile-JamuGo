@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile_jamugo/firebase_options.dart';
 import 'package:mobile_jamugo/pages/home_page.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mobile_jamugo/pages/landing_page.dart';
 import 'package:mobile_jamugo/pages/login_page.dart';
 import 'package:mobile_jamugo/pages/register_page.dart';
 
@@ -15,11 +16,15 @@ void main() async {
 class MyApp extends StatelessWidget {
   MyApp({super.key});
   final _router = GoRouter(
-    initialLocation: '/',
+    initialLocation: '/landing',
     routes: [
       GoRoute(
         path: '/',
         builder: (context, state) => const LoginPage(),
+      ),
+      GoRoute(
+        path: '/landing',
+        builder: (context, state) => const LandingPage(),
       ),
       GoRoute(
         path: '/home',

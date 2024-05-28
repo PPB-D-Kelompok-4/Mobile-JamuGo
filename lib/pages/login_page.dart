@@ -1,9 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_text_fields/material_text_fields.dart';
-import "package:material_text_fields/theme/material_text_field_theme.dart";
-import "package:material_text_fields/utils/form_validation.dart";
+import 'package:material_text_fields/theme/material_text_field_theme.dart';
+import 'package:material_text_fields/utils/form_validation.dart';
+import 'package:mobile_jamugo/api/auth.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -23,13 +24,16 @@ class _LoginPageState extends State<LoginPage> {
     super.initState();
   }
 
-  void showErrorSnackbar(BuildContext context, String errorCode) {
-    final snackBar = SnackBar(
-      content: Text('Error: $errorCode'),
-      backgroundColor: Colors.red,
-      duration: const Duration(seconds: 2),
+  void showToast(BuildContext context, String message, bool isSuccess) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: isSuccess ? Colors.green : Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
     );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   void signUserIn() async {
@@ -44,15 +48,17 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      LoginResponse response = await AuthApi.login(
         email: emailController.text,
         password: passwordController.text,
       );
 
       Navigator.pop(currentContext);
-    } on FirebaseAuthException catch (e) {
+      GoRouter.of(context).go('/home');
+      showToast(currentContext, response.message, response.isSuccess);
+    } catch (e) {
       Navigator.pop(currentContext);
-      showErrorSnackbar(currentContext, e.code);
+      showToast(currentContext, e.toString(), false);
     }
   }
 
@@ -63,15 +69,16 @@ class _LoginPageState extends State<LoginPage> {
         child: SingleChildScrollView(
           child: Stack(
             children: [
-              SizedBox(
+              const SizedBox(
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 60.0, left: 22),
+                  padding: EdgeInsets.only(top: 60.0, left: 22),
                   child: Text(
                     'Sign-in.',
                     style: TextStyle(
-                        fontSize: 35,
-                        color: Colors.indigo[900],
-                        fontWeight: FontWeight.bold),
+                      fontSize: 35,
+                      color: Colors.green,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
@@ -90,9 +97,10 @@ class _LoginPageState extends State<LoginPage> {
                         theme: BorderlessTextTheme(
                           radius: 0,
                           errorStyle: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.red,
-                              fontWeight: FontWeight.w700),
+                            fontSize: 16,
+                            color: Colors.red,
+                            fontWeight: FontWeight.w700,
+                          ),
                           fillColor: Colors.transparent,
                           enabledColor: Colors.black,
                           focusedColor: Colors.black,
@@ -106,7 +114,7 @@ class _LoginPageState extends State<LoginPage> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 25.0),
                       child: MaterialTextField(
-                        keyboardType: TextInputType.emailAddress,
+                        keyboardType: TextInputType.visiblePassword,
                         labelText: "Password",
                         textInputAction: TextInputAction.done,
                         controller: passwordController,
@@ -128,9 +136,10 @@ class _LoginPageState extends State<LoginPage> {
                         theme: BorderlessTextTheme(
                           radius: 0,
                           errorStyle: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.red,
-                              fontWeight: FontWeight.w700),
+                            fontSize: 16,
+                            color: Colors.red,
+                            fontWeight: FontWeight.w700,
+                          ),
                           fillColor: Colors.transparent,
                           enabledColor: Colors.black,
                           focusedColor: Colors.black,
@@ -138,21 +147,6 @@ class _LoginPageState extends State<LoginPage> {
                               const TextStyle(color: Colors.black),
                           width: 2,
                         ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Text(
-                            'Forget Password?',
-                            style: TextStyle(
-                                color: Colors.indigo[900],
-                                fontWeight: FontWeight.w500),
-                          ),
-                        ],
                       ),
                     ),
                     const SizedBox(height: 40),
@@ -163,7 +157,7 @@ class _LoginPageState extends State<LoginPage> {
                         minWidth: MediaQuery.of(context).size.width,
                         height: 55,
                         elevation: 2,
-                        color: Colors.indigo[900],
+                        color: Colors.green,
                         visualDensity: VisualDensity.compact,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(18),
@@ -179,7 +173,7 @@ class _LoginPageState extends State<LoginPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "Don/'t have an account?",
+                          "Don't have an account?",
                           style: TextStyle(color: Colors.grey[700]),
                         ),
                         const SizedBox(width: 2),
@@ -187,10 +181,10 @@ class _LoginPageState extends State<LoginPage> {
                           onTap: () {
                             GoRouter.of(context).go('/register');
                           },
-                          child: Text(
+                          child: const Text(
                             'Register',
                             style: TextStyle(
-                              color: Colors.indigo[900],
+                              color: Colors.green,
                               fontWeight: FontWeight.bold,
                             ),
                           ),

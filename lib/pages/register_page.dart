@@ -1,9 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mobile_jamugo/main.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:material_text_fields/material_text_fields.dart';
 import "package:material_text_fields/theme/material_text_field_theme.dart";
 import "package:material_text_fields/utils/form_validation.dart";
@@ -17,6 +14,8 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  final nameController = TextEditingController();
+  final addressController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
@@ -24,6 +23,18 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   void initState() {
     super.initState();
+  }
+
+  void showToast(BuildContext context, String message, bool isSuccess) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: isSuccess ? Colors.green : Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
   }
 
   void signUserUp() async {
@@ -38,24 +49,23 @@ class _RegisterPageState extends State<RegisterPage> {
 
     try {
       if (passwordController.text == confirmPasswordController.text) {
-        await AuthApi.register(
+        final RegisterResponse response = await AuthApi.register(
           email: emailController.text,
           password: passwordController.text,
-          name: 'Helmi',
-          address: 'Informatika',
+          name: nameController.text,
+          address: addressController.text,
         );
 
-        GoRouter.of(context).go('/home');
-        print("user registered");
+        showToast(context, response.message, response.isSuccess);
+        GoRouter.of(context).go('/login');
       } else {
-        print("password don't match");
+        showToast(context, "Passwords do not match", false);
       }
 
       Navigator.pop(context);
-    } on FirebaseAuthException catch (e) {
+    } catch (e) {
       Navigator.pop(context);
-
-      print("auth error: " + e.code);
+      showToast(context, e.toString(), false);
     }
   }
 
@@ -67,22 +77,70 @@ class _RegisterPageState extends State<RegisterPage> {
         child: SingleChildScrollView(
           child: Stack(
             children: [
-              SizedBox(
+              const SizedBox(
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 60.0, left: 22),
+                  padding: EdgeInsets.only(top: 60.0, left: 22),
                   child: Text(
                     'Sign-up.',
                     style: TextStyle(
                         fontSize: 35,
-                        color: Colors.indigo[900],
+                        color: Colors.green,
                         fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 250.0),
+                padding: const EdgeInsets.only(top: 150.0),
                 child: Column(
                   children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                      child: MaterialTextField(
+                        keyboardType: TextInputType.emailAddress,
+                        labelText: "Name",
+                        textInputAction: TextInputAction.next,
+                        controller: nameController,
+                        validator: FormValidation.requiredTextField,
+                        theme: BorderlessTextTheme(
+                          radius: 0,
+                          errorStyle: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.red,
+                              fontWeight: FontWeight.w700),
+                          fillColor: Colors.transparent,
+                          enabledColor: Colors.black,
+                          focusedColor: Colors.black,
+                          floatingLabelStyle:
+                              const TextStyle(color: Colors.black),
+                          width: 2,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                      child: MaterialTextField(
+                        keyboardType: TextInputType.emailAddress,
+                        labelText: "Address",
+                        textInputAction: TextInputAction.next,
+                        controller: addressController,
+                        validator: FormValidation.requiredTextField,
+                        theme: BorderlessTextTheme(
+                          radius: 0,
+                          errorStyle: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.red,
+                              fontWeight: FontWeight.w700),
+                          fillColor: Colors.transparent,
+                          enabledColor: Colors.black,
+                          focusedColor: Colors.black,
+                          floatingLabelStyle:
+                              const TextStyle(color: Colors.black),
+                          width: 2,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 25.0),
                       child: MaterialTextField(
@@ -164,7 +222,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         minWidth: MediaQuery.of(context).size.width,
                         height: 55,
                         elevation: 2,
-                        color: Colors.indigo[900],
+                        color: Colors.green,
                         visualDensity: VisualDensity.compact,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(18),
@@ -188,10 +246,10 @@ class _RegisterPageState extends State<RegisterPage> {
                           onTap: () {
                             GoRouter.of(context).go('/login');
                           },
-                          child: Text(
+                          child: const Text(
                             'Login',
                             style: TextStyle(
-                              color: Colors.indigo[900],
+                              color: Colors.green,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
