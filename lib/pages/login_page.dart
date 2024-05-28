@@ -42,23 +42,23 @@ class _LoginPageState extends State<LoginPage> {
       context: currentContext,
       builder: (context) {
         return const Center(
-          child: CircularProgressIndicator(),
+          child: CircularProgressIndicator(color: Colors.green,),
         );
       },
     );
 
-    try {
-      LoginResponse response = await AuthApi.login(
-        email: emailController.text,
-        password: passwordController.text,
-      );
+    LoginResponse response = await AuthApi.login(
+      email: emailController.text,
+      password: passwordController.text,
+    );
 
-      Navigator.pop(currentContext);
+    Navigator.pop(currentContext);
+    showToast(currentContext, response.message, response.isSuccess);
+
+    if (response.isSuccess == true) {
       GoRouter.of(context).go('/home');
-      showToast(currentContext, response.message, response.isSuccess);
-    } catch (e) {
-      Navigator.pop(currentContext);
-      showToast(currentContext, e.toString(), false);
+    } else {
+      GoRouter.of(context).refresh();
     }
   }
 

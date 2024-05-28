@@ -19,6 +19,9 @@ class AuthApi {
         'name': name,
         'address': address,
       },
+        options: Options(
+          validateStatus: (status) => true,
+        )
     );
 
     return RegisterResponse.fromJson(response.data);
@@ -34,6 +37,9 @@ class AuthApi {
         'email': email,
         'password': password,
       },
+      options: Options(
+        validateStatus: (status) => true,
+      )
     );
 
     return LoginResponse.fromJson(response.data);
@@ -52,8 +58,9 @@ class RegisterResponse {
   });
 
   factory RegisterResponse.fromJson(Map<String, dynamic> json) {
+    final temp = json['message'].split("-")[1];
     return RegisterResponse(
-      message: json['message'],
+      message: temp,
       isSuccess: json['isSuccess'],
       status: json['status'],
     );
@@ -64,21 +71,22 @@ class LoginResponse {
   final String message;
   final bool isSuccess;
   final int status;
-  final String token;
+  final String? token;
 
   LoginResponse({
     required this.message,
     required this.isSuccess,
     required this.status,
-    required this.token,
+    this.token,
   });
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) {
+    final temp = json['message'].split("-")[1];
     return LoginResponse(
-      message: json['message'],
+      message: temp,
       isSuccess: json['isSuccess'],
       status: json['status'],
-      token: json['data']['token'],
+      token: json['isSuccess'] == true ? json['data']['token'] : null,
     );
   }
 }

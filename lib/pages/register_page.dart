@@ -42,30 +42,27 @@ class _RegisterPageState extends State<RegisterPage> {
       context: context,
       builder: (context) {
         return const Center(
-          child: CircularProgressIndicator(),
+          child: CircularProgressIndicator(color: Colors.green),
         );
       },
     );
 
-    try {
-      if (passwordController.text == confirmPasswordController.text) {
-        final RegisterResponse response = await AuthApi.register(
-          email: emailController.text,
-          password: passwordController.text,
-          name: nameController.text,
-          address: addressController.text,
-        );
-
-        showToast(context, response.message, response.isSuccess);
+    if (passwordController.text == confirmPasswordController.text) {
+      final RegisterResponse response = await AuthApi.register(
+        email: emailController.text,
+        password: passwordController.text,
+        name: nameController.text,
+        address: addressController.text,
+      );
+      Navigator.pop(context);
+      showToast(context, response.message, response.isSuccess);
+      if (response.isSuccess == true) {
         GoRouter.of(context).go('/login');
       } else {
-        showToast(context, "Passwords do not match", false);
+        GoRouter.of(context).refresh();
       }
-
-      Navigator.pop(context);
-    } catch (e) {
-      Navigator.pop(context);
-      showToast(context, e.toString(), false);
+    } else {
+      showToast(context, "Passwords do not match", false);
     }
   }
 
