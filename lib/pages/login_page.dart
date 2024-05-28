@@ -5,6 +5,7 @@ import 'package:material_text_fields/theme/material_text_field_theme.dart';
 import 'package:material_text_fields/utils/form_validation.dart';
 import 'package:mobile_jamugo/api/auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:mobile_jamugo/utils/secure_storage.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -42,7 +43,9 @@ class _LoginPageState extends State<LoginPage> {
       context: currentContext,
       builder: (context) {
         return const Center(
-          child: CircularProgressIndicator(color: Colors.green,),
+          child: CircularProgressIndicator(
+            color: Colors.green,
+          ),
         );
       },
     );
@@ -57,6 +60,7 @@ class _LoginPageState extends State<LoginPage> {
 
     if (response.isSuccess == true) {
       GoRouter.of(context).go('/home');
+      await SecureStorage.writeSecureData(key: 'token', value: response.token!);
     } else {
       GoRouter.of(context).refresh();
     }
