@@ -16,10 +16,13 @@ For help getting started with Flutter development, view the
 samples, guidance on mobile development, and a full API reference.
 
 Landing Page:
-<img src="![image](https://github.com/PPB-D-Kelompok-4/Mobile-JamuGo/assets/85897222/86a52847-de18-4f6e-8c83-eaf6c1c55d6f)" width="500"/>
+<br/>
+<img src="https://github.com/PPB-D-Kelompok-4/Mobile-JamuGo/assets/85897222/86a52847-de18-4f6e-8c83-eaf6c1c55d6f" width="500"/>
 
 Login Page:
-<img src="![image](https://github.com/PPB-D-Kelompok-4/Mobile-JamuGo/assets/85897222/1750dd03-d706-4b1f-aac9-bd4ecfb12516)" width="500"/>
+<br/>
+<img src="https://github.com/PPB-D-Kelompok-4/Mobile-JamuGo/assets/85897222/1750dd03-d706-4b1f-aac9-bd4ecfb12516" width="500"/>
 
 Register Page:
-<img src="![image](https://github.com/PPB-D-Kelompok-4/Mobile-JamuGo/assets/85897222/5af9595f-4f36-4987-8fe5-b1b8fe47c72b)" width="500"/>
+<br/>
+<img src="https://github.com/PPB-D-Kelompok-4/Mobile-JamuGo/assets/85897222/5af9595f-4f36-4987-8fe5-b1b8fe47c72b" width="500"/>
