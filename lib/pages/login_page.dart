@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:material_text_fields/material_text_fields.dart';
 import 'package:material_text_fields/theme/material_text_field_theme.dart';
 import 'package:material_text_fields/utils/form_validation.dart';
-import 'package:mobile_jamugo/api/auth.dart';
+import 'package:mobile_jamugo/api/auth/auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mobile_jamugo/utils/secure_storage.dart';
 
