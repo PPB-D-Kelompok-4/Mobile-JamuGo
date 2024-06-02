@@ -1,10 +1,13 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_jamugo/firebase_options.dart';
+import 'package:mobile_jamugo/pages/cart_page.dart';
 import 'package:mobile_jamugo/pages/home_page.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile_jamugo/pages/landing_page.dart';
 import 'package:mobile_jamugo/pages/login_page.dart';
+import 'package:mobile_jamugo/pages/order_page.dart';
+import 'package:mobile_jamugo/pages/profile_page.dart';
 import 'package:mobile_jamugo/pages/register_page.dart';
 
 void main() async {
@@ -37,6 +40,18 @@ class MyApp extends StatelessWidget {
       GoRoute(
         path: '/register',
         builder: (context, state) => const RegisterPage(),
+      ),
+      GoRoute(
+        path: '/profile',
+        builder: (context, state) => const ProfilePage(),
+      ),
+      GoRoute(
+        path: '/order',
+        builder: (context, state) => const OrderPage(),
+      ),
+      GoRoute(
+        path: '/cart',
+        builder: (context, state) => const CartPage(),
       ),
     ],
   );
