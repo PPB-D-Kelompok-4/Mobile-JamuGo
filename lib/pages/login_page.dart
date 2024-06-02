@@ -23,6 +23,15 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     _passwordVisible = false;
     super.initState();
+    getToken();
+  }
+
+  Future<String> getToken() async {
+    final token = await SecureStorage.readSecureData(key: 'token');
+    if (token != null) {
+      GoRouter.of(context).go('/home');
+    }
+    return token ?? '';
   }
 
   void showToast(BuildContext context, String message, bool isSuccess) {

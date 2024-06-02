@@ -116,17 +116,12 @@ class Menu {
   });
 
   factory Menu.fromJson(Map<String, dynamic> json) {
-    const String baseUrl = "http://103.127.132.182:3009";
-    String imageUrl = json['image_url'];
-    if (imageUrl.startsWith('undefined')) {
-      imageUrl = imageUrl.replaceFirst('undefined', baseUrl);
-    }
     return Menu(
       pkid: json['pkid'],
       name: json['name'],
       description: json['description'],
       price: double.parse(json['price'].toString()),
-      imageUrl: imageUrl,
+      imageUrl: json['image_url'],
       createdBy: json['created_by'],
       createdDate: json['created_date'],
       createdHost: json['created_host'],

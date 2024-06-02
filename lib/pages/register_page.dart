@@ -5,6 +5,7 @@ import 'package:material_text_fields/material_text_fields.dart';
 import "package:material_text_fields/theme/material_text_field_theme.dart";
 import "package:material_text_fields/utils/form_validation.dart";
 import "package:mobile_jamugo/api/auth/auth.dart";
+import 'package:mobile_jamugo/utils/secure_storage.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -23,6 +24,15 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   void initState() {
     super.initState();
+    getToken();
+  }
+
+  Future<String> getToken() async {
+    final token = await SecureStorage.readSecureData(key: 'token');
+    if (token != null) {
+      GoRouter.of(context).go('/home');
+    }
+    return token ?? '';
   }
 
   void showToast(BuildContext context, String message, bool isSuccess) {

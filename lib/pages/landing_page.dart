@@ -1,8 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mobile_jamugo/utils/secure_storage.dart';
 
-class LandingPage extends StatelessWidget {
+class LandingPage extends StatefulWidget {
   const LandingPage({super.key});
+
+  @override
+  State<LandingPage> createState() => _LandingPageState();
+}
+
+class _LandingPageState extends State<LandingPage> {
+  @override
+  void initState() {
+    super.initState();
+    getToken();
+  }
+
+  Future<String> getToken() async {
+    final token = await SecureStorage.readSecureData(key: 'token');
+    if (token != null) {
+      GoRouter.of(context).go('/home');
+    }
+    return token ?? '';
+  }
 
   @override
   Widget build(BuildContext context) {
