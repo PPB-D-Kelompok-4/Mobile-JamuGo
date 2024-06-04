@@ -1,6 +1,6 @@
 {
-    "name": "mobile_jamugo",
-    "short_name": "mobile_jamugo",
+    "name": "jamugo",
+    "short_name": "jamugo",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:dio/dio.dart';
-import 'package:mobile_jamugo/utils/secure_storage.dart';
+import 'package:jamugo/utils/secure_storage.dart';
 import 'package:go_router/go_router.dart';
 
 class ProfilePage extends StatefulWidget {

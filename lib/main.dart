@@ -1,14 +1,14 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile_jamugo/firebase_options.dart';
-import 'package:mobile_jamugo/pages/cart_page.dart';
-import 'package:mobile_jamugo/pages/home_page.dart';
+import 'package:jamugo/firebase_options.dart';
+import 'package:jamugo/pages/cart_page.dart';
+import 'package:jamugo/pages/home_page.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mobile_jamugo/pages/landing_page.dart';
-import 'package:mobile_jamugo/pages/login_page.dart';
-import 'package:mobile_jamugo/pages/order_page.dart';
-import 'package:mobile_jamugo/pages/profile_page.dart';
-import 'package:mobile_jamugo/pages/register_page.dart';
+import 'package:jamugo/pages/landing_page.dart';
+import 'package:jamugo/pages/login_page.dart';
+import 'package:jamugo/pages/order_page.dart';
+import 'package:jamugo/pages/profile_page.dart';
+import 'package:jamugo/pages/register_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

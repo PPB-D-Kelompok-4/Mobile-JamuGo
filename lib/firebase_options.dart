@@ -63,7 +63,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '880131574846',
     projectId: 'jamugo-firebase',
     storageBucket: 'jamugo-firebase.appspot.com',
-    iosBundleId: 'com.example.mobileJamugo',
+    iosBundleId: 'com.example.jamugo',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -72,7 +72,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '880131574846',
     projectId: 'jamugo-firebase',
     storageBucket: 'jamugo-firebase.appspot.com',
-    iosBundleId: 'com.example.mobileJamugo',
+    iosBundleId: 'com.example.jamugo',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(

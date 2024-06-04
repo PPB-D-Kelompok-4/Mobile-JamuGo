@@ -5,18 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "mobile_jamugo",
+            "name": "jamugo",
             "request": "launch",
             "type": "dart"
         },
         {
-            "name": "mobile_jamugo (profile mode)",
+            "name": "jamugo (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "mobile_jamugo (release mode)",
+            "name": "jamugo (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"
