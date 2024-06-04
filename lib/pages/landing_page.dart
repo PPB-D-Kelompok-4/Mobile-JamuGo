@@ -74,17 +74,24 @@ class _LandingPageState extends State<LandingPage> {
                         GoRouter.of(context).go('/login');
                       },
                       style: OutlinedButton.styleFrom(
-                        shape: const RoundedRectangleBorder(),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
                         backgroundColor: const Color.fromRGBO(94, 185, 120, 1),
                         side: const BorderSide(
-                            color: Color.fromRGBO(94, 185, 120, 1)),
+                          color: Color.fromRGBO(94, 185, 120, 1),
+                        ),
                         padding: const EdgeInsets.symmetric(
                           vertical: 15,
                         ),
                       ),
                       child: const Text(
                         'Login',
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
@@ -93,10 +100,15 @@ class _LandingPageState extends State<LandingPage> {
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
-                        side: const BorderSide(color: Colors.black),
-                        shape: const RoundedRectangleBorder(),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
                         padding: const EdgeInsets.symmetric(
                           vertical: 15,
+                        ),
+                        backgroundColor: Colors.white,
+                        side: const BorderSide(
+                          color: Color.fromRGBO(94, 185, 120, 1),
                         ),
                       ),
                       onPressed: () {
@@ -104,8 +116,11 @@ class _LandingPageState extends State<LandingPage> {
                       },
                       child: const Text(
                         'Register',
-                        style:
-                            TextStyle(color: Color.fromRGBO(94, 185, 120, 1)),
+                        style: TextStyle(
+                          color: Color.fromRGBO(94, 185, 120, 1),
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
