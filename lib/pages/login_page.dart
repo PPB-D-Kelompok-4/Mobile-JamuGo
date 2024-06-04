@@ -6,6 +6,8 @@ import 'package:material_text_fields/utils/form_validation.dart';
 import 'package:mobile_jamugo/api/auth/auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mobile_jamugo/utils/secure_storage.dart';
+import 'package:mobile_jamugo/utils/shared_preferences.dart';
+import 'package:mobile_jamugo/widgets/submit_button.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -27,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<String> getToken() async {
-    final token = await SecureStorage.readSecureData(key: 'token');
+    final token = await SecureStorageUtil.readSecureData(key: 'token');
     if (token != null) {
       GoRouter.of(context).go('/home');
     }
@@ -59,17 +61,23 @@ class _LoginPageState extends State<LoginPage> {
       },
     );
 
-    LoginResponse response = await AuthApi.login(
+    LoginResponse loginResponse = await AuthApi.login(
       email: emailController.text,
       password: passwordController.text,
     );
 
     Navigator.pop(currentContext);
-    showToast(currentContext, response.message, response.isSuccess);
+    showToast(currentContext, loginResponse.message, loginResponse.isSuccess);
 
-    if (response.isSuccess == true) {
+    if (loginResponse.isSuccess == true) {
+      await SecureStorageUtil.writeSecureData(
+          key: 'token', value: loginResponse.token!);
+      CheckTokenResponse checkTokenResponse = await AuthApi.checkToken();
+      await SharedPreferencesUtil.writeData(
+          key: 'role', value: checkTokenResponse.role);
+      await SharedPreferencesUtil.writeData(
+          key: 'name', value: checkTokenResponse.name);
       GoRouter.of(context).go('/home');
-      await SecureStorage.writeSecureData(key: 'token', value: response.token!);
     } else {
       GoRouter.of(context).refresh();
     }
@@ -82,16 +90,28 @@ class _LoginPageState extends State<LoginPage> {
         child: SingleChildScrollView(
           child: Stack(
             children: [
-              const SizedBox(
+              SizedBox(
                 child: Padding(
-                  padding: EdgeInsets.only(top: 60.0, left: 22),
-                  child: Text(
-                    'Sign-in.',
-                    style: TextStyle(
-                      fontSize: 35,
-                      color: Colors.green,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  padding: const EdgeInsets.only(top: 60.0, left: 22),
+                  child: Row(
+                    children: [
+                      IconButton(
+                        icon: const Icon(
+                          Icons.arrow_back,
+                          color: Colors.green,
+                        ),
+                        onPressed: () {
+                          GoRouter.of(context).go('/landing');
+                        },
+                      ),
+                      const Text(
+                        'Sign-in.',
+                        style: TextStyle(
+                            fontSize: 35,
+                            color: Colors.green,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -163,24 +183,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     const SizedBox(height: 40),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                      child: MaterialButton(
-                        onPressed: signUserIn,
-                        minWidth: MediaQuery.of(context).size.width,
-                        height: 55,
-                        elevation: 2,
-                        color: Colors.green,
-                        visualDensity: VisualDensity.compact,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18),
-                        ),
-                        child: const Text(
-                          "Sign in",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ),
+                    SubmitButton(onPressed: signUserIn, buttonText: 'Sign in'),
                     const SizedBox(height: 50),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,

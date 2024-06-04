@@ -6,6 +6,7 @@ import "package:material_text_fields/theme/material_text_field_theme.dart";
 import "package:material_text_fields/utils/form_validation.dart";
 import "package:mobile_jamugo/api/auth/auth.dart";
 import 'package:mobile_jamugo/utils/secure_storage.dart';
+import 'package:mobile_jamugo/widgets/submit_button.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -28,7 +29,7 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   Future<String> getToken() async {
-    final token = await SecureStorage.readSecureData(key: 'token');
+    final token = await SecureStorageUtil.readSecureData(key: 'token');
     if (token != null) {
       GoRouter.of(context).go('/home');
     }
@@ -84,15 +85,28 @@ class _RegisterPageState extends State<RegisterPage> {
         child: SingleChildScrollView(
           child: Stack(
             children: [
-              const SizedBox(
+              SizedBox(
                 child: Padding(
-                  padding: EdgeInsets.only(top: 60.0, left: 22),
-                  child: Text(
-                    'Sign-up.',
-                    style: TextStyle(
-                        fontSize: 35,
-                        color: Colors.green,
-                        fontWeight: FontWeight.bold),
+                  padding: const EdgeInsets.only(top: 60.0, left: 22),
+                  child: Row(
+                    children: [
+                      IconButton(
+                        icon: const Icon(
+                          Icons.arrow_back,
+                          color: Colors.green,
+                        ),
+                        onPressed: () {
+                          GoRouter.of(context).go('/landing');
+                        },
+                      ),
+                      const Text(
+                        'Sign-up.',
+                        style: TextStyle(
+                            fontSize: 35,
+                            color: Colors.green,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -222,24 +236,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                     ),
                     const SizedBox(height: 40),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                      child: MaterialButton(
-                        onPressed: signUserUp,
-                        minWidth: MediaQuery.of(context).size.width,
-                        height: 55,
-                        elevation: 2,
-                        color: Colors.green,
-                        visualDensity: VisualDensity.compact,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18),
-                        ),
-                        child: const Text(
-                          "Sign up",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ),
+                    SubmitButton(onPressed: signUserUp, buttonText: 'Sign up'),
                     const SizedBox(height: 50),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
