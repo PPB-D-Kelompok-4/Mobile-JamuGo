@@ -28,45 +28,44 @@ class _LandingPageState extends State<LandingPage> {
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     return Scaffold(
-      body: SingleChildScrollView(
+      body: Center(
         child: Container(
-          padding: const EdgeInsets.all(30),
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const Spacer(),
               Image.asset(
                 'assets/images/jamugologo.png',
-                height: height * 0.5,
+                height: height * 0.3,
               ),
-              const Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text(
-                    'JamuGO',
-                    style: TextStyle(
-                      fontSize: 60,
-                      color: Color.fromRGBO(94, 185, 120, 1),
-                      fontWeight: FontWeight.bold,
-                      shadows: [
-                        Shadow(
-                          blurRadius: 5.0,
-                          color: Colors.black,
-                          offset: Offset(1.0, 1.0),
-                        ),
-                      ],
+              const SizedBox(height: 20),
+              const Text(
+                'JamuGO',
+                style: TextStyle(
+                  fontSize: 60,
+                  color: Color.fromRGBO(94, 185, 120, 1),
+                  fontWeight: FontWeight.bold,
+                  shadows: [
+                    Shadow(
+                      blurRadius: 5.0,
+                      color: Colors.black,
+                      offset: Offset(1.0, 1.0),
                     ),
-                  ),
-                  Text(
-                    'Kesehatan Tradisional dalam Genggaman Anda.',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Color.fromRGBO(0, 0, 0, 1),
-                      fontWeight: FontWeight.normal,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
+                  ],
+                ),
               ),
-              const SizedBox(height: 200),
+              const SizedBox(height: 10),
+              const Text(
+                'Kesehatan Tradisional dalam Genggaman Anda.',
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Color.fromRGBO(0, 0, 0, 1),
+                  fontWeight: FontWeight.normal,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const Spacer(),
               Row(
                 children: [
                   Expanded(
@@ -112,6 +111,7 @@ class _LandingPageState extends State<LandingPage> {
                   ),
                 ],
               ),
+              const SizedBox(height: 20),
             ],
           ),
         ),
