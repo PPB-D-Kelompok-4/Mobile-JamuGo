@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:mobile_jamugo/utils/secure_storage.dart';
 
@@ -7,7 +8,7 @@ final dio = Dio(BaseOptions(
 
 class MenuApi {
   static Future<String?> getToken() async {
-    final token = await SecureStorage.readSecureData(key: 'token');
+    final token = await SecureStorageUtil.readSecureData(key: 'token');
     return token;
   }
 
@@ -42,21 +43,22 @@ class MenuApi {
     return Menu.fromJson(response.data);
   }
 
-  static Future<void> createMenu({
+  static Future<MenuResponse> createMenu({
     required String name,
     required String description,
     required double price,
-    required String imageUrl,
+    required File imageFile,
   }) async {
     final token = await getToken();
-    await dio.post(
+    final formData = FormData.fromMap({
+      'name': name,
+      'description': description,
+      'price': price,
+      'image_url': await MultipartFile.fromFile(imageFile.path),
+    });
+    final response = await dio.post(
       '/menu',
-      data: {
-        'name': name,
-        'description': description,
-        'price': price,
-        'image_url': imageUrl,
-      },
+      data: formData,
       options: Options(
         validateStatus: (status) => true,
         headers: {
@@ -64,6 +66,37 @@ class MenuApi {
         },
       ),
     );
+
+    return MenuResponse.fromJson(response.data);
+  }
+
+  static Future<MenuResponse> updateMenu({
+    required int id,
+    required String name,
+    required String description,
+    required double price,
+    File? imageFile,
+  }) async {
+    final token = await getToken();
+    final formData = FormData.fromMap({
+      'name': name,
+      'description': description,
+      'price': price,
+      if (imageFile != null)
+        'image_url': await MultipartFile.fromFile(imageFile.path),
+    });
+    final response = await dio.put(
+      '/menu/$id',
+      data: formData,
+      options: Options(
+        validateStatus: (status) => true,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      ),
+    );
+
+    return MenuResponse.fromJson(response.data);
   }
 
   static Future<void> deleteMenu(int id) async {
@@ -86,13 +119,13 @@ class Menu {
   final String description;
   final double price;
   final String imageUrl;
-  final String createdBy;
-  final String createdDate;
-  final String createdHost;
+  final String? createdBy;
+  final String? createdDate;
+  final String? createdHost;
   final String? updatedBy;
   final String? updatedDate;
   final String? updatedHost;
-  final bool isDeleted;
+  final bool? isDeleted;
   final String? deletedBy;
   final String? deletedDate;
   final String? deletedHost;
@@ -132,6 +165,27 @@ class Menu {
       deletedBy: json['deleted_by'],
       deletedDate: json['deleted_date'],
       deletedHost: json['deleted_host'],
+    );
+  }
+}
+
+class MenuResponse {
+  final String message;
+  final bool isSuccess;
+  final int status;
+
+  MenuResponse({
+    required this.message,
+    required this.isSuccess,
+    required this.status,
+  });
+
+  factory MenuResponse.fromJson(Map<String, dynamic> json) {
+    final temp = json['message'].split("-")[1];
+    return MenuResponse(
+      message: temp,
+      isSuccess: json['isSuccess'],
+      status: json['status'],
     );
   }
 }
