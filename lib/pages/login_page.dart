@@ -88,102 +88,113 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Stack(
+          child: Column(
             children: [
-              SizedBox(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 60.0, left: 22),
-                  child: Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(
-                          Icons.arrow_back,
-                          color: Colors.green,
-                        ),
-                        onPressed: () {
-                          GoRouter.of(context).go('/landing');
-                        },
-                      ),
-                      const Text(
-                        'Sign-in.',
-                        style: TextStyle(
-                            fontSize: 35,
-                            color: Colors.green,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 250.0),
+              Container(
+                padding: const EdgeInsets.all(20),
                 child: Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                      child: MaterialTextField(
-                        keyboardType: TextInputType.emailAddress,
-                        labelText: "Email",
-                        textInputAction: TextInputAction.next,
-                        controller: emailController,
-                        validator: FormValidation.emailTextField,
-                        theme: BorderlessTextTheme(
-                          radius: 0,
-                          errorStyle: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.red,
-                            fontWeight: FontWeight.w700,
-                          ),
-                          fillColor: Colors.transparent,
-                          enabledColor: Colors.black,
-                          focusedColor: Colors.black,
-                          floatingLabelStyle:
-                              const TextStyle(color: Colors.black),
-                          width: 2,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                      child: MaterialTextField(
-                        keyboardType: TextInputType.visiblePassword,
-                        labelText: "Password",
-                        textInputAction: TextInputAction.done,
-                        controller: passwordController,
-                        validator: FormValidation.requiredTextField,
-                        obscureText: !_passwordVisible,
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            !_passwordVisible
-                                ? Icons.visibility
-                                : Icons.visibility_off,
-                            color: Colors.grey[500],
+                    Row(
+                      children: [
+                        IconButton(
+                          icon: const Icon(
+                            Icons.arrow_back,
+                            color: Colors.green,
                           ),
                           onPressed: () {
-                            setState(() {
-                              _passwordVisible = !_passwordVisible;
-                            });
+                            GoRouter.of(context).go('/landing');
                           },
                         ),
-                        theme: BorderlessTextTheme(
-                          radius: 0,
-                          errorStyle: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.red,
-                            fontWeight: FontWeight.w700,
+                        const SizedBox(width: 10),
+                        const Text(
+                          'Sign-in',
+                          style: TextStyle(
+                            fontSize: 35,
+                            color: Colors.green,
+                            fontWeight: FontWeight.bold,
                           ),
-                          fillColor: Colors.transparent,
-                          enabledColor: Colors.black,
-                          focusedColor: Colors.black,
-                          floatingLabelStyle:
-                              const TextStyle(color: Colors.black),
-                          width: 2,
                         ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.green.shade100,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 20, horizontal: 20),
+                      child: Column(
+                        children: [
+                          Image.asset(
+                            'assets/images/login.png',
+                            height: 150,
+                            width: 150,
+                          ),
+                          const SizedBox(height: 20),
+                          MaterialTextField(
+                            keyboardType: TextInputType.emailAddress,
+                            labelText: "Email",
+                            textInputAction: TextInputAction.next,
+                            controller: emailController,
+                            validator: FormValidation.emailTextField,
+                            theme: BorderlessTextTheme(
+                              radius: 10,
+                              errorStyle: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.red,
+                                fontWeight: FontWeight.w700,
+                              ),
+                              fillColor: Colors.white,
+                              enabledColor: Colors.green,
+                              focusedColor: Colors.green,
+                              floatingLabelStyle:
+                                  const TextStyle(color: Colors.green),
+                              width: 2,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          MaterialTextField(
+                            keyboardType: TextInputType.visiblePassword,
+                            labelText: "Password",
+                            textInputAction: TextInputAction.done,
+                            controller: passwordController,
+                            validator: FormValidation.requiredTextField,
+                            obscureText: !_passwordVisible,
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                !_passwordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                color: Colors.grey[500],
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _passwordVisible = !_passwordVisible;
+                                });
+                              },
+                            ),
+                            theme: BorderlessTextTheme(
+                              radius: 10,
+                              errorStyle: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.red,
+                                fontWeight: FontWeight.w700,
+                              ),
+                              fillColor: Colors.white,
+                              enabledColor: Colors.green,
+                              focusedColor: Colors.green,
+                              floatingLabelStyle:
+                                  const TextStyle(color: Colors.green),
+                              width: 2,
+                            ),
+                          ),
+                          const SizedBox(height: 40),
+                          SubmitButton(
+                              onPressed: signUserIn, buttonText: 'Sign in'),
+                        ],
                       ),
                     ),
-                    const SizedBox(height: 40),
-                    SubmitButton(onPressed: signUserIn, buttonText: 'Sign in'),
                     const SizedBox(height: 50),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
