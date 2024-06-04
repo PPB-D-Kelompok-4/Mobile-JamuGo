@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:mobile_jamugo/utils/secure_storage.dart';
+import 'package:jamugo/utils/secure_storage.dart';
 
 final dio = Dio(BaseOptions(
   baseUrl: 'http://103.127.132.182:3009/api',

@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:mobile_jamugo/widgets/file_picker.dart';
-import 'package:mobile_jamugo/widgets/submit_button.dart';
-import 'package:mobile_jamugo/widgets/text_field.dart';
+import 'package:jamugo/widgets/file_picker.dart';
+import 'package:jamugo/widgets/submit_button.dart';
+import 'package:jamugo/widgets/text_field.dart';
 import 'package:material_text_fields/utils/form_validation.dart';
-import 'package:mobile_jamugo/api/menu/menu.dart';
+import 'package:jamugo/api/menu/menu.dart';
 
 class UpdateMenuPage extends StatefulWidget {
   final Menu menu;
