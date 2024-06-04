@@ -1,16 +1,16 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:jamugo/firebase_options.dart';
-import 'package:jamugo/pages/add_menu_page.dart';
-import 'package:jamugo/pages/cart_page.dart';
-import 'package:jamugo/pages/home_page.dart';
+import 'package:jamugo/pages/menus/add_menu_page.dart';
+import 'package:jamugo/pages/carts/cart_page.dart';
+import 'package:jamugo/pages/menus/home_page.dart';
 import 'package:go_router/go_router.dart';
-import 'package:jamugo/pages/landing_page.dart';
-import 'package:jamugo/pages/login_page.dart';
-import 'package:jamugo/pages/order_page.dart';
-import 'package:jamugo/pages/profile_page.dart';
-import 'package:jamugo/pages/register_page.dart';
-import 'package:jamugo/pages/update_menu_page.dart';
+import 'package:jamugo/pages/auth/landing_page.dart';
+import 'package:jamugo/pages/auth/login_page.dart';
+import 'package:jamugo/pages/orders/order_page.dart';
+import 'package:jamugo/pages/profiles/profile_page.dart';
+import 'package:jamugo/pages/auth/register_page.dart';
+import 'package:jamugo/pages/menus/update_menu_page.dart';
 import 'package:jamugo/api/menu/menu.dart';
 
 void main() async {
