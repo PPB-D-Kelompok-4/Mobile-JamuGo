@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mobile_jamugo/utils/secure_storage.dart';
+import 'package:jamugo/utils/secure_storage.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({super.key});
@@ -110,6 +110,7 @@ class _LandingPageState extends State<LandingPage> {
               ],
             ),
           ],
+
         ),
       ),
     );

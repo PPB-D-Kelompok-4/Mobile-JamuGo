@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:material_text_fields/material_text_fields.dart';
 import "package:material_text_fields/theme/material_text_field_theme.dart";
 import "package:material_text_fields/utils/form_validation.dart";
-import "package:mobile_jamugo/api/auth/auth.dart";
-import 'package:mobile_jamugo/utils/secure_storage.dart';
-import 'package:mobile_jamugo/widgets/submit_button.dart';
+import "package:jamugo/api/auth/auth.dart";
+import 'package:jamugo/utils/secure_storage.dart';
+import 'package:jamugo/widgets/submit_button.dart';
+
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});

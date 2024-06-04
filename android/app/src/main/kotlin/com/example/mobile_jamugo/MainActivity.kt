@@ -1,4 +1,4 @@
-package com.example.mobile_jamugo
+package com.example.jamugo
 
 import io.flutter.embedding.android.FlutterActivity
 

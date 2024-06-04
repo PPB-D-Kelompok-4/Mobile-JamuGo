@@ -1,4 +1,4 @@
-# mobile_jamugo
+# Jamugo
 
 JamuGo, Pesan jamu dan minuman herbal tradisional Indonesia dengan mudah dan cepat langsung dari smartphone Anda.
 
