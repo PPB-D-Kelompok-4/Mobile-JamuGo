@@ -8,10 +8,12 @@ import 'package:go_router/go_router.dart';
 import 'package:jamugo/pages/auth/landing_page.dart';
 import 'package:jamugo/pages/auth/login_page.dart';
 import 'package:jamugo/pages/orders/order_page.dart';
-import 'package:jamugo/pages/profiles/profile_page.dart';
+import 'package:jamugo/pages/profiles/profile_edit_page.dart';
+// import 'package:jamugo/pages/profiles/profile_page.dart';
 import 'package:jamugo/pages/auth/register_page.dart';
 import 'package:jamugo/pages/menus/update_menu_page.dart';
 import 'package:jamugo/api/menu/menu.dart';
+import 'package:jamugo/pages/profiles/profile_view_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,7 +49,11 @@ class MyApp extends StatelessWidget {
       ),
       GoRoute(
         path: '/profile',
-        builder: (context, state) => const ProfilePage(),
+        builder: (context, state) => const ProfileViewPage(),
+      ),
+      GoRoute(
+        path: '/profile/edit',
+        builder: (context, state) => const ProfileEditPage(),
       ),
       GoRoute(
         path: '/order',
