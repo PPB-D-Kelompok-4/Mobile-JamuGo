@@ -18,6 +18,7 @@ class _ProfilePageState extends State<ProfilePage> {
   final _nameController = TextEditingController();
   final _addressController = TextEditingController();
   final _emailController = TextEditingController();
+  final _roleController = TextEditingController();
 
   bool _isEditing = false;
   File? _localProfileImage;
@@ -44,6 +45,7 @@ class _ProfilePageState extends State<ProfilePage> {
           _nameController.text = userData['name'];
           _addressController.text = userData['address'];
           _emailController.text = userData['email'];
+          _roleController.text = userData['role_pkid'] == 2 ? 'Admin' : 'Customer';
           _pkid = userData['pkid'];
         });
 
@@ -269,7 +271,7 @@ class _ProfilePageState extends State<ProfilePage> {
       children: [
         _buildProfileInfo('Name', _nameController.text),
         _buildProfileInfo('Address', _addressController.text),
-        _buildProfileInfo('Role', 'Customer'),
+        _buildProfileInfo('Role', _roleController.text),
         _buildProfileInfo('Email', _emailController.text),
       ],
     );
