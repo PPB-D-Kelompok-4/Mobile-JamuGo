@@ -2,12 +2,11 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 import 'package:material_text_fields/material_text_fields.dart';
-import "package:material_text_fields/theme/material_text_field_theme.dart";
-import "package:material_text_fields/utils/form_validation.dart";
-import "package:jamugo/api/auth/auth.dart";
+import 'package:material_text_fields/theme/material_text_field_theme.dart';
+import 'package:material_text_fields/utils/form_validation.dart';
+import 'package:jamugo/api/auth/auth.dart';
 import 'package:jamugo/utils/secure_storage.dart';
 import 'package:jamugo/widgets/submit_button.dart';
-
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -84,160 +83,160 @@ class _RegisterPageState extends State<RegisterPage> {
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Stack(
+          child: Column(
             children: [
-              SizedBox(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 60.0, left: 22),
-                  child: Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(
-                          Icons.arrow_back,
-                          color: Colors.green,
-                        ),
-                        onPressed: () {
-                          GoRouter.of(context).go('/landing');
-                        },
-                      ),
-                      const Text(
-                        'Sign-up.',
-                        style: TextStyle(
-                            fontSize: 35,
-                            color: Colors.green,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 150.0),
+              Container(
+                padding: const EdgeInsets.all(20),
                 child: Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                      child: MaterialTextField(
-                        keyboardType: TextInputType.emailAddress,
-                        labelText: "Name",
-                        textInputAction: TextInputAction.next,
-                        controller: nameController,
-                        validator: FormValidation.requiredTextField,
-                        theme: BorderlessTextTheme(
-                          radius: 0,
-                          errorStyle: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.red,
-                              fontWeight: FontWeight.w700),
-                          fillColor: Colors.transparent,
-                          enabledColor: Colors.black,
-                          focusedColor: Colors.black,
-                          floatingLabelStyle:
-                              const TextStyle(color: Colors.black),
-                          width: 2,
+                    Row(
+                      children: [
+                        IconButton(
+                          icon: const Icon(
+                            Icons.arrow_back,
+                            color: Colors.green,
+                          ),
+                          onPressed: () {
+                            GoRouter.of(context).go('/landing');
+                          },
                         ),
-                      ),
+                        const SizedBox(width: 10),
+                        const Text(
+                          'Sign-up',
+                          style: TextStyle(
+                            fontSize: 35,
+                            color: Colors.green,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 20),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                      child: MaterialTextField(
-                        keyboardType: TextInputType.emailAddress,
-                        labelText: "Address",
-                        textInputAction: TextInputAction.next,
-                        controller: addressController,
-                        validator: FormValidation.requiredTextField,
-                        theme: BorderlessTextTheme(
-                          radius: 0,
-                          errorStyle: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.red,
-                              fontWeight: FontWeight.w700),
-                          fillColor: Colors.transparent,
-                          enabledColor: Colors.black,
-                          focusedColor: Colors.black,
-                          floatingLabelStyle:
-                              const TextStyle(color: Colors.black),
-                          width: 2,
-                        ),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.green.shade100,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 50, horizontal: 20),
+                      child: Column(
+                        children: [
+                          MaterialTextField(
+                            keyboardType: TextInputType.name,
+                            labelText: "Name",
+                            textInputAction: TextInputAction.next,
+                            controller: nameController,
+                            validator: FormValidation.requiredTextField,
+                            theme: BorderlessTextTheme(
+                              radius: 10,
+                              errorStyle: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.red,
+                                fontWeight: FontWeight.w700,
+                              ),
+                              fillColor: Colors.white,
+                              enabledColor: Colors.green,
+                              focusedColor: Colors.green,
+                              floatingLabelStyle:
+                                  const TextStyle(color: Colors.green),
+                              width: 2,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          MaterialTextField(
+                            keyboardType: TextInputType.streetAddress,
+                            labelText: "Address",
+                            textInputAction: TextInputAction.next,
+                            controller: addressController,
+                            validator: FormValidation.requiredTextField,
+                            theme: BorderlessTextTheme(
+                              radius: 10,
+                              errorStyle: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.red,
+                                fontWeight: FontWeight.w700,
+                              ),
+                              fillColor: Colors.white,
+                              enabledColor: Colors.green,
+                              focusedColor: Colors.green,
+                              floatingLabelStyle:
+                                  const TextStyle(color: Colors.green),
+                              width: 2,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          MaterialTextField(
+                            keyboardType: TextInputType.emailAddress,
+                            labelText: "Email",
+                            textInputAction: TextInputAction.next,
+                            controller: emailController,
+                            validator: FormValidation.emailTextField,
+                            theme: BorderlessTextTheme(
+                              radius: 10,
+                              errorStyle: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.red,
+                                fontWeight: FontWeight.w700,
+                              ),
+                              fillColor: Colors.white,
+                              enabledColor: Colors.green,
+                              focusedColor: Colors.green,
+                              floatingLabelStyle:
+                                  const TextStyle(color: Colors.green),
+                              width: 2,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          MaterialTextField(
+                            keyboardType: TextInputType.visiblePassword,
+                            labelText: "Password",
+                            textInputAction: TextInputAction.next,
+                            controller: passwordController,
+                            validator: FormValidation.requiredTextField,
+                            obscureText: true,
+                            theme: BorderlessTextTheme(
+                              radius: 10,
+                              errorStyle: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.red,
+                                fontWeight: FontWeight.w700,
+                              ),
+                              fillColor: Colors.white,
+                              enabledColor: Colors.green,
+                              focusedColor: Colors.green,
+                              floatingLabelStyle:
+                                  const TextStyle(color: Colors.green),
+                              width: 2,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          MaterialTextField(
+                            keyboardType: TextInputType.visiblePassword,
+                            labelText: "Confirm Password",
+                            textInputAction: TextInputAction.done,
+                            controller: confirmPasswordController,
+                            validator: FormValidation.requiredTextField,
+                            obscureText: true,
+                            theme: BorderlessTextTheme(
+                              radius: 10,
+                              errorStyle: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.red,
+                                fontWeight: FontWeight.w700,
+                              ),
+                              fillColor: Colors.white,
+                              enabledColor: Colors.green,
+                              focusedColor: Colors.green,
+                              floatingLabelStyle:
+                                  const TextStyle(color: Colors.green),
+                              width: 2,
+                            ),
+                          ),
+                          const SizedBox(height: 40),
+                          SubmitButton(onPressed: signUserUp, buttonText: 'Sign up'),
+                        ],
                       ),
                     ),
-                    const SizedBox(height: 20),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                      child: MaterialTextField(
-                        keyboardType: TextInputType.emailAddress,
-                        labelText: "Email",
-                        textInputAction: TextInputAction.next,
-                        controller: emailController,
-                        validator: FormValidation.emailTextField,
-                        theme: BorderlessTextTheme(
-                          radius: 0,
-                          errorStyle: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.red,
-                              fontWeight: FontWeight.w700),
-                          fillColor: Colors.transparent,
-                          enabledColor: Colors.black,
-                          focusedColor: Colors.black,
-                          floatingLabelStyle:
-                              const TextStyle(color: Colors.black),
-                          width: 2,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                      child: MaterialTextField(
-                        keyboardType: TextInputType.emailAddress,
-                        labelText: "Password",
-                        textInputAction: TextInputAction.done,
-                        controller: passwordController,
-                        validator: FormValidation.requiredTextField,
-                        obscureText: true,
-                        theme: BorderlessTextTheme(
-                          radius: 0,
-                          errorStyle: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.red,
-                              fontWeight: FontWeight.w700),
-                          fillColor: Colors.transparent,
-                          enabledColor: Colors.black,
-                          focusedColor: Colors.black,
-                          floatingLabelStyle:
-                              const TextStyle(color: Colors.black),
-                          width: 2,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                      child: MaterialTextField(
-                        keyboardType: TextInputType.emailAddress,
-                        labelText: "Confirm Password",
-                        textInputAction: TextInputAction.done,
-                        controller: confirmPasswordController,
-                        validator: FormValidation.requiredTextField,
-                        obscureText: true,
-                        theme: BorderlessTextTheme(
-                          radius: 0,
-                          errorStyle: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.red,
-                              fontWeight: FontWeight.w700),
-                          fillColor: Colors.transparent,
-                          enabledColor: Colors.black,
-                          focusedColor: Colors.black,
-                          floatingLabelStyle:
-                              const TextStyle(color: Colors.black),
-                          width: 2,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 40),
-                    SubmitButton(onPressed: signUserUp, buttonText: 'Sign up'),
                     const SizedBox(height: 50),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
