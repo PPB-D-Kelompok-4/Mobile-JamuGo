@@ -166,7 +166,7 @@ class _ProfilePageState extends State<ProfilePage> {
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () {
-              SecureStorage.deleteSecureData(key: 'token');
+              SecureStorageUtil.deleteSecureData(key: 'token');
               GoRouter.of(context).go('/landing');
             },
           ),
