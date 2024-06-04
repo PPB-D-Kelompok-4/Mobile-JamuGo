@@ -3,6 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:jamugo/api/menu/menu.dart';
 import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
+import 'package:jamugo/utils/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,11 +14,23 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late Future<List<Menu>> menus;
+  String role = '';
+  String name = '';
 
   @override
   void initState() {
     super.initState();
     menus = _getMenus();
+    getUserData();
+  }
+
+  Future<void> getUserData() async {
+    final getRole = await SharedPreferencesUtil.readData(key: 'role');
+    final getName = await SharedPreferencesUtil.readData(key: 'name');
+    setState(() {
+      role = getRole ?? '';
+      name = getName ?? '';
+    });
   }
 
   Future<List<Menu>> _getMenus() async {
@@ -40,19 +53,81 @@ class _HomePageState extends State<HomePage> {
     return formatCurrency.format(price);
   }
 
+  Future<void> _deleteMenu(int id) async {
+    await MenuApi.deleteMenu(id);
+    Fluttertoast.showToast(
+      msg: 'Menu deleted successfully',
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      backgroundColor: Colors.green,
+      textColor: Colors.white,
+    );
+    setState(() {
+      menus = _getMenus();
+    });
+  }
+
+  Future<void> _showDeleteConfirmationDialog(
+      BuildContext context, int id) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirm Delete'),
+          content: const Text('Are you sure you want to delete this menu?'),
+          actions: <Widget>[
+            TextButton(
+              child:
+                  const Text('Cancel', style: TextStyle(color: Colors.green)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Delete', style: TextStyle(color: Colors.red)),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _deleteMenu(id);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _refreshMenus() {
+    setState(() {
+      menus = _getMenus();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Menu"),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.shopping_cart),
-            onPressed: () {
-              GoRouter.of(context).push('/cart');
-            },
-          ),
-        ],
+        title: Text('Halo, $name'),
+        actions: role == 'customer'
+            ? [
+                IconButton(
+                  icon: const Icon(Icons.shopping_cart),
+                  onPressed: () {
+                    GoRouter.of(context).push('/cart');
+                  },
+                ),
+              ]
+            : [
+                IconButton(
+                  icon: const Icon(Icons.add),
+                  onPressed: () {
+                    GoRouter.of(context).push(
+                      '/add_menu',
+                      extra: _refreshMenus,
+                    );
+                  },
+                ),
+              ],
         backgroundColor: Colors.green,
       ),
       body: FutureBuilder<List<Menu>>(
@@ -98,15 +173,44 @@ class _HomePageState extends State<HomePage> {
                     style: const TextStyle(
                         color: Colors.black, fontWeight: FontWeight.w500),
                   ),
-                  trailing: IconButton(
-                    icon: const Icon(
-                      Icons.add,
-                      color: Colors.green,
-                    ),
-                    onPressed: () {
-                      // TODO: Add to cart
-                    },
-                  ),
+                  trailing: role == 'customer'
+                      ? IconButton(
+                          icon: const Icon(
+                            Icons.add,
+                            color: Colors.green,
+                          ),
+                          onPressed: () {
+                            // TODO: Add to cart
+                          },
+                        )
+                      : Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(
+                                Icons.edit,
+                                color: Colors.green,
+                              ),
+                              onPressed: () {
+                                GoRouter.of(context).push(
+                                  '/update_menu',
+                                  extra: {
+                                    'menu': menu,
+                                    'onMenuUpdated': _refreshMenus,
+                                  },
+                                );
+                              },
+                            ),
+                            IconButton(
+                              icon: const Icon(
+                                Icons.delete,
+                                color: Colors.red,
+                              ),
+                              onPressed: () => _showDeleteConfirmationDialog(
+                                  context, menu.pkid),
+                            ),
+                          ],
+                        ),
                   onTap: () {
                     // TODO: Show menu detail modal
                   },

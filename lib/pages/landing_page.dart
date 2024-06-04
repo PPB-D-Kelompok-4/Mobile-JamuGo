@@ -18,7 +18,7 @@ class _LandingPageState extends State<LandingPage> {
   }
 
   Future<String> getToken() async {
-    final token = await SecureStorage.readSecureData(key: 'token');
+    final token = await SecureStorageUtil.readSecureData(key: 'token');
     if (token != null) {
       GoRouter.of(context).go('/home');
     }
@@ -42,21 +42,18 @@ class _LandingPageState extends State<LandingPage> {
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
-    return WillPopScope(
-      onWillPop: _onWillPop,
-      child: Scaffold(
-        body: Center(
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+    return Scaffold(
+      body: Container(
+        padding: const EdgeInsets.all(30),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
               children: [
-                const Spacer(),
                 Image.asset(
                   'assets/images/jamugologo.png',
-                  height: height * 0.3,
+                  height: height * 0.5,
                 ),
-                const SizedBox(height: 20),
                 const Text(
                   'JamuGO',
                   style: TextStyle(
@@ -72,7 +69,6 @@ class _LandingPageState extends State<LandingPage> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 10),
                 const Text(
                   'Kesehatan Tradisional dalam Genggaman Anda.',
                   style: TextStyle(
@@ -82,71 +78,54 @@ class _LandingPageState extends State<LandingPage> {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const Spacer(),
-                Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () {
-                          GoRouter.of(context).go('/login');
-                        },
-                        style: OutlinedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20.0),
-                          ),
-                          backgroundColor: const Color.fromRGBO(94, 185, 120, 1),
-                          side: const BorderSide(
-                            color: Color.fromRGBO(94, 185, 120, 1),
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 15,
-                          ),
-                        ),
-                        child: const Text(
-                          'Login',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20.0),
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 15,
-                          ),
-                          backgroundColor: Colors.white,
-                          side: const BorderSide(
-                            color: Color.fromRGBO(94, 185, 120, 1),
-                          ),
-                        ),
-                        onPressed: () {
-                          GoRouter.of(context).go('/register');
-                        },
-                        child: const Text(
-                          'Register',
-                          style: TextStyle(
-                            color: Color.fromRGBO(94, 185, 120, 1),
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
               ],
             ),
-          ),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () {
+                      GoRouter.of(context).go('/login');
+                    },
+                    style: OutlinedButton.styleFrom(
+                      shape: const RoundedRectangleBorder(),
+                      backgroundColor: const Color.fromRGBO(94, 185, 120, 1),
+                      side: const BorderSide(
+                          color: Color.fromRGBO(94, 185, 120, 1)),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 15,
+                      ),
+                    ),
+                    child: const Text(
+                      'Login',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      side: const BorderSide(color: Colors.black),
+                      shape: const RoundedRectangleBorder(),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 15,
+                      ),
+                    ),
+                    onPressed: () {
+                      GoRouter.of(context).go('/register');
+                    },
+                    child: const Text(
+                      'Register',
+                      style: TextStyle(color: Color.fromRGBO(94, 185, 120, 1)),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+
         ),
       ),
     );
