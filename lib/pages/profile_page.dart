@@ -32,7 +32,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> _loadUserData() async {
     try {
-      final token = await SecureStorage.readSecureData(key: 'token');
+      final token = await SecureStorageUtil.readSecureData(key: 'token');
       if (token != null) {
         final response = await Dio().get(
           'http://103.127.132.182:3009/api/user/me',
@@ -89,7 +89,8 @@ class _ProfilePageState extends State<ProfilePage> {
     if (pickedFile != null) {
       final appDir = await getApplicationDocumentsDirectory();
       final fileName = pickedFile.path.split('/').last;
-      final savedImage = await File(pickedFile.path).copy('${appDir.path}/$fileName');
+      final savedImage =
+          await File(pickedFile.path).copy('${appDir.path}/$fileName');
 
       setState(() {
         _localProfileImage = savedImage;
@@ -100,7 +101,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> _uploadProfileImage() async {
     if (_localProfileImage == null) return;
 
-    final token = await SecureStorage.readSecureData(key: 'token');
+    final token = await SecureStorageUtil.readSecureData(key: 'token');
     if (token != null) {
       final formData = FormData.fromMap({
         'image': await MultipartFile.fromFile(_localProfileImage!.path),
@@ -129,7 +130,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> _updateUserData() async {
     if (_formKey.currentState!.validate()) {
-      final token = await SecureStorage.readSecureData(key: 'token');
+      final token = await SecureStorageUtil.readSecureData(key: 'token');
       if (token != null && _pkid != null) {
         try {
           await Dio().put(
@@ -189,9 +190,10 @@ class _ProfilePageState extends State<ProfilePage> {
                     backgroundImage: _localProfileImage != null
                         ? FileImage(_localProfileImage!)
                         : _networkProfileImage != null
-                        ? FileImage(_networkProfileImage!)
-                        : null,
-                    child: _localProfileImage == null && _networkProfileImage == null
+                            ? FileImage(_networkProfileImage!)
+                            : null,
+                    child: _localProfileImage == null &&
+                            _networkProfileImage == null
                         ? Icon(Icons.person, size: 80, color: Colors.grey[600])
                         : null,
                   ),
@@ -226,8 +228,8 @@ class _ProfilePageState extends State<ProfilePage> {
               },
               child: Text(_isEditing ? 'Save' : 'Edit'),
               style: ElevatedButton.styleFrom(
-                // primary: Colors.green,
-              ),
+                  // primary: Colors.green,
+                  ),
             ),
           ],
         ),
