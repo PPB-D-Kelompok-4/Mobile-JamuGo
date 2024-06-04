@@ -3,7 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:jamugo/api/menu/menu.dart';
 import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mobile_jamugo/utils/shared_preferences.dart';
+import 'package:jamugo/utils/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
