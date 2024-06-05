@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:jamugo/api/menu/menu.dart';
-import 'package:intl/intl.dart';
+import 'package:jamugo/api/cart/cart.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jamugo/utils/shared_preferences.dart';
+import 'package:jamugo/components/menu_list_tile.dart';
+import 'package:google_fonts/google_fonts.dart';  // Import Google Fonts
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,12 +18,14 @@ class _HomePageState extends State<HomePage> {
   late Future<List<Menu>> menus;
   String role = '';
   String name = '';
+  Map<int, int> cartQuantities = {}; // Map to store the quantities of items in the cart
 
   @override
   void initState() {
     super.initState();
     menus = _getMenus();
     getUserData();
+    _getCartData(); // Fetch cart data on initialization
   }
 
   Future<void> getUserData() async {
@@ -31,6 +35,24 @@ class _HomePageState extends State<HomePage> {
       role = getRole ?? '';
       name = getName ?? '';
     });
+  }
+
+  Future<void> _getCartData() async {
+    try {
+      final response = await CartApi.getCartByUser();
+      if (response.isSuccess && response.data != null) {
+        final items = response.data!['items'] as List<dynamic>;
+        for (var item in items) {
+          cartQuantities[item['menu_pkid']] = item['quantity'];
+        }
+      }
+    } catch (error) {
+      Fluttertoast.showToast(
+        msg: 'Failed to get cart data: $error',
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+      );
+    }
   }
 
   Future<List<Menu>> _getMenus() async {
@@ -45,12 +67,6 @@ class _HomePageState extends State<HomePage> {
       );
       return [];
     }
-  }
-
-  String _formatPrice(double price) {
-    final formatCurrency =
-        NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
-    return formatCurrency.format(price);
   }
 
   Future<void> _deleteMenu(int id) async {
@@ -103,11 +119,36 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  Future<void> _updateCart(int menuPkid, int quantity) async {
+    try {
+      await CartApi.createOrUpdateCartItem(
+        menuPkid: menuPkid,
+        quantity: quantity,
+      );
+      Fluttertoast.showToast(
+        msg: 'Cart updated successfully',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+      );
+    } catch (error) {
+      Fluttertoast.showToast(
+        msg: 'Failed to update cart: $error',
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Halo, $name'),
+        title: Text(
+          'Halo, $name',
+          style: GoogleFonts.pacifico(),  // Use Google Fonts for title
+        ),
         actions: role == 'customer'
             ? [
                 IconButton(
@@ -152,68 +193,28 @@ class _HomePageState extends State<HomePage> {
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 final menu = snapshot.data![index];
-                return ListTile(
-                  minVerticalPadding: 30,
-                  leading: SizedBox(
-                    height: 200,
-                    width: 50,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(30),
-                      child: Image(
-                        image: NetworkImage(menu.imageUrl),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  title: Text(menu.name,
-                      style: const TextStyle(
-                          color: Colors.black, fontWeight: FontWeight.w500)),
-                  subtitle: Text(
-                    _formatPrice(menu.price),
-                    style: const TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.w500),
-                  ),
-                  trailing: role == 'customer'
-                      ? IconButton(
-                          icon: const Icon(
-                            Icons.add,
-                            color: Colors.green,
-                          ),
-                          onPressed: () {
-                            // TODO: Add to cart
-                          },
-                        )
-                      : Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: const Icon(
-                                Icons.edit,
-                                color: Colors.green,
-                              ),
-                              onPressed: () {
-                                GoRouter.of(context).push(
-                                  '/update_menu',
-                                  extra: {
-                                    'menu': menu,
-                                    'onMenuUpdated': _refreshMenus,
-                                  },
-                                );
-                              },
-                            ),
-                            IconButton(
-                              icon: const Icon(
-                                Icons.delete,
-                                color: Colors.red,
-                              ),
-                              onPressed: () => _showDeleteConfirmationDialog(
-                                  context, menu.pkid),
-                            ),
-                          ],
-                        ),
-                  onTap: () {
-                    // TODO: Show menu detail modal
+                int quantity = cartQuantities[menu.pkid] ?? 0; // Default quantity is 0
+
+                return MenuListTile(
+                  menu: menu,
+                  quantity: quantity,
+                  onAdd: () {
+                    setState(() {
+                      quantity++;
+                      cartQuantities[menu.pkid] = quantity;
+                    });
+                    _updateCart(menu.pkid, quantity);
                   },
+                  onRemove: () {
+                    setState(() {
+                      if (quantity > 0) {
+                        quantity--;
+                        cartQuantities[menu.pkid] = quantity;
+                      }
+                    });
+                    _updateCart(menu.pkid, quantity);
+                  },
+                  role: role,
                 );
               },
             );
