@@ -2,7 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:jamugo/firebase_options.dart';
 import 'package:jamugo/pages/menus/add_menu_page.dart';
-import 'package:jamugo/pages/carts/cart_page.dart';
+import 'package:jamugo/pages/carts/cart_detail_page.dart';
 import 'package:jamugo/pages/menus/home_page.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jamugo/pages/auth/landing_page.dart';
@@ -61,7 +61,7 @@ class MyApp extends StatelessWidget {
       ),
       GoRoute(
         path: '/cart',
-        builder: (context, state) => const CartPage(),
+        builder: (context, state) => const CartDetailPage(),
       ),
       GoRoute(
         path: '/add_menu',

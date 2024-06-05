@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:jamugo/api/menu/menu.dart';
 import 'package:jamugo/utils/secure_storage.dart';
 
 final dio = Dio(BaseOptions(
@@ -46,6 +47,34 @@ class CartApi {
     );
 
     return CartResponse.fromJson(response.data);
+  }
+
+  static Future<void> deleteCartItem(int itemId) async {
+    final token = await getToken();
+    await dio.delete(
+      '/cart/item/$itemId',
+      options: Options(
+        validateStatus: (status) => true,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      ),
+    );
+  }
+
+    static Future<Menu> getMenuById(int id) async {
+    final token = await getToken();
+    final response = await dio.get(
+      '/menu/$id',
+      options: Options(
+        validateStatus: (status) => true,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      ),
+    );
+
+    return Menu.fromJson(response.data['data']);
   }
 }
 
