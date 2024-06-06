@@ -191,66 +191,74 @@ class _CartDetailPageState extends State<CartDetailPage> {
                             final menuName = menuSnapshot.data!.name;
                             final menuImageUrl = menuSnapshot.data!.imageUrl;
 
-                            return Card(
-                              elevation: 3,
-                              margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                              child: Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    if (menuImageUrl.isNotEmpty)
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(10),
-                                        child: Image.network(
-                                          menuImageUrl,
-                                          width: 100,
-                                          height: 100,
-                                          fit: BoxFit.cover,
+                            return AnimatedContainer(
+                              duration: const Duration(milliseconds: 300),
+                              child: Card(
+                                color: Colors.white,
+                                elevation: 5,
+                                shadowColor: Colors.grey.withOpacity(0.5),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      if (menuImageUrl.isNotEmpty)
+                                        ClipRRect(
+                                          borderRadius: BorderRadius.circular(10),
+                                          child: Image.network(
+                                            menuImageUrl,
+                                            width: 100,
+                                            height: 100,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      const SizedBox(width: 10),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              menuName,
+                                              style: const TextStyle(
+                                                  fontSize: 18, fontWeight: FontWeight.bold),
+                                            ),
+                                            const SizedBox(height: 5),
+                                            Text(
+                                              _formatPrice(price),
+                                              style: const TextStyle(
+                                                  fontSize: 16, fontWeight: FontWeight.w500),
+                                            ),
+                                            const SizedBox(height: 10),
+                                            CartItemCounter(
+                                              quantity: quantity,
+                                              onAdd: () {
+                                                setState(() {
+                                                  quantities[itemId] = quantity + 1;
+                                                });
+                                                _updateCartItem(menuPkid, quantity + 1);
+                                              },
+                                              onRemove: () {
+                                                if (quantity > 0) {
+                                                  setState(() {
+                                                    quantities[itemId] = quantity - 1;
+                                                  });
+                                                  _updateCartItem(menuPkid, quantity - 1);
+                                                }
+                                              },
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                    const SizedBox(width: 10),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            menuName,
-                                            style: const TextStyle(
-                                                fontSize: 18, fontWeight: FontWeight.bold),
-                                          ),
-                                          const SizedBox(height: 5),
-                                          Text(
-                                            _formatPrice(price),
-                                            style: const TextStyle(
-                                                fontSize: 16, fontWeight: FontWeight.w500),
-                                          ),
-                                          const SizedBox(height: 10),
-                                          CartItemCounter(
-                                            quantity: quantity,
-                                            onAdd: () {
-                                              setState(() {
-                                                quantities[itemId] = quantity + 1;
-                                              });
-                                              _updateCartItem(menuPkid, quantity + 1);
-                                            },
-                                            onRemove: () {
-                                              if (quantity > 0) {
-                                                setState(() {
-                                                  quantities[itemId] = quantity - 1;
-                                                });
-                                                _updateCartItem(menuPkid, quantity - 1);
-                                              }
-                                            },
-                                          ),
-                                        ],
+                                      IconButton(
+                                        icon: const Icon(Icons.delete, color: Colors.red),
+                                        onPressed: () => _deleteCartItem(itemId),
                                       ),
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(Icons.delete, color: Colors.red),
-                                      onPressed: () => _deleteCartItem(itemId),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
                             );
@@ -269,7 +277,7 @@ class _CartDetailPageState extends State<CartDetailPage> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
-                        padding: const EdgeInsets.symmetric(vertical: 15),
+                        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
                       ),
                       onPressed: () {
                         _createOrder();
