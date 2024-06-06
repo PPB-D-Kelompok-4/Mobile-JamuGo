@@ -51,6 +51,10 @@ class _ProfileViewPageState extends State<ProfileViewPage> {
     }
   }
 
+  Future<void> _refreshProfile() async {
+    await _loadUserData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,10 +71,10 @@ class _ProfileViewPageState extends State<ProfileViewPage> {
         ],
         backgroundColor: Colors.green,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+      body: RefreshIndicator(
+        onRefresh: _refreshProfile,
+        child: ListView(
+          padding: const EdgeInsets.all(16.0),
           children: [
             GestureDetector(
               onTap: null,
@@ -92,23 +96,23 @@ class _ProfileViewPageState extends State<ProfileViewPage> {
             ),
             SizedBox(height: 20),
             _buildProfileView(),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-              GoRouter.of(context).go('/profile/edit');
-            },
-                child: Text('Edit'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  padding: EdgeInsets.all(16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  textStyle: TextStyle(
-                    fontSize: 16,
-                    ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                GoRouter.of(context).go('/profile/edit');
+              },
+              child: Text('Edit'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
+                padding: EdgeInsets.all(16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                textStyle: TextStyle(
+                  fontSize: 16,
                 ),
               ),
+            ),
           ],
         ),
       ),

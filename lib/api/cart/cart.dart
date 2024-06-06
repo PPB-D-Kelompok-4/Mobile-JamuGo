@@ -62,7 +62,7 @@ class CartApi {
     );
   }
 
-    static Future<Menu> getMenuById(int id) async {
+  static Future<Menu> getMenuById(int id) async {
     final token = await getToken();
     final response = await dio.get(
       '/menu/$id',

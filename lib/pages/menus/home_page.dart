@@ -5,7 +5,7 @@ import 'package:jamugo/api/cart/cart.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jamugo/utils/shared_preferences.dart';
 import 'package:jamugo/components/menu_list_tile.dart';
-import 'package:google_fonts/google_fonts.dart'; 
+import 'package:google_fonts/google_fonts.dart';  // Import Google Fonts
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -18,14 +18,14 @@ class _HomePageState extends State<HomePage> {
   late Future<List<Menu>> menus;
   String role = '';
   String name = '';
-  Map<int, int> cartQuantities = {}; 
+  Map<int, int> cartQuantities = {}; // Map to store the quantities of items in the cart
 
   @override
   void initState() {
     super.initState();
     menus = _getMenus();
     getUserData();
-    _getCartData(); 
+    _getCartData(); // Fetch cart data on initialization
   }
 
   Future<void> getUserData() async {
@@ -113,7 +113,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void _refreshMenus() {
+  Future<void> _refreshMenus() async {
     setState(() {
       menus = _getMenus();
     });
@@ -147,14 +147,14 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text(
           'Halo, $name',
-          style: GoogleFonts.pacifico(), 
+          style: GoogleFonts.pacifico(),  // Use Google Fonts for title
         ),
         actions: role == 'customer'
             ? [
                 IconButton(
                   icon: const Icon(Icons.shopping_cart),
                   onPressed: () {
-                    GoRouter.of(context).push('/cart'); 
+                    GoRouter.of(context).push('/cart');  // Navigate to Cart Detail Page
                   },
                 ),
               ]
@@ -171,55 +171,58 @@ class _HomePageState extends State<HomePage> {
               ],
         backgroundColor: Colors.green,
       ),
-      body: FutureBuilder<List<Menu>>(
-        future: menus,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(
-                color: Colors.green,
-              ),
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text('Error: ${snapshot.error}'),
-            );
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(
-              child: Text('No menus available'),
-            );
-          } else {
-            return ListView.builder(
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                final menu = snapshot.data![index];
-                int quantity = cartQuantities[menu.pkid] ?? 0;
+      body: RefreshIndicator(
+        onRefresh: _refreshMenus,
+        child: FutureBuilder<List<Menu>>(
+          future: menus,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(
+                  color: Colors.green,
+                ),
+              );
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text('Error: ${snapshot.error}'),
+              );
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return const Center(
+                child: Text('No menus available'),
+              );
+            } else {
+              return ListView.builder(
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) {
+                  final menu = snapshot.data![index];
+                  int quantity = cartQuantities[menu.pkid] ?? 0; // Default quantity is 0
 
-                return MenuListTile(
-                  menu: menu,
-                  quantity: quantity,
-                  onAdd: () {
-                    setState(() {
-                      quantity++;
-                      cartQuantities[menu.pkid] = quantity;
-                    });
-                    _updateCart(menu.pkid, quantity);
-                  },
-                  onRemove: () {
-                    setState(() {
-                      if (quantity > 0) {
-                        quantity--;
+                  return MenuListTile(
+                    menu: menu,
+                    quantity: quantity,
+                    onAdd: () {
+                      setState(() {
+                        quantity++;
                         cartQuantities[menu.pkid] = quantity;
-                      }
-                    });
-                    _updateCart(menu.pkid, quantity);
-                  },
-                  role: role,
-                );
-              },
-            );
-          }
-        },
+                      });
+                      _updateCart(menu.pkid, quantity);
+                    },
+                    onRemove: () {
+                      setState(() {
+                        if (quantity > 0) {
+                          quantity--;
+                          cartQuantities[menu.pkid] = quantity;
+                        }
+                      });
+                      _updateCart(menu.pkid, quantity);
+                    },
+                    role: role,
+                  );
+                },
+              );
+            }
+          },
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: 0,
