@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:jamugo/api/menu/menu.dart';
 import 'package:jamugo/components/cart_item_counter.dart';
 import 'package:intl/intl.dart';
@@ -9,19 +10,23 @@ class MenuListTile extends StatelessWidget {
   final Function onAdd;
   final Function onRemove;
   final String role;
+  final Function refreshMenus;
+  final Function showDeleteConfirmationDialog;
 
   const MenuListTile({
-    Key? key,
+    super.key,
     required this.menu,
     required this.quantity,
     required this.onAdd,
     required this.onRemove,
     required this.role,
-  }) : super(key: key);
+    required this.refreshMenus,
+    required this.showDeleteConfirmationDialog,
+  });
 
   String _formatPrice(double price) {
-    final formatCurrency = NumberFormat.currency(
-        locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
+    final formatCurrency =
+        NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
     return formatCurrency.format(price);
   }
 
@@ -83,14 +88,19 @@ class MenuListTile extends StatelessWidget {
                     IconButton(
                       icon: const Icon(Icons.edit, color: Colors.green),
                       onPressed: () {
-                        // Add your logic for editing the menu here
+                        GoRouter.of(context).push(
+                          '/update_menu',
+                          extra: {
+                            'menu': menu,
+                            'onMenuUpdated': refreshMenus,
+                          },
+                        );
                       },
                     ),
                     IconButton(
                       icon: const Icon(Icons.delete, color: Colors.red),
-                      onPressed: () {
-                        // Add your logic for deleting the menu here
-                      },
+                      onPressed: () =>
+                          showDeleteConfirmationDialog(context, menu.pkid),
                     ),
                   ],
                 ),

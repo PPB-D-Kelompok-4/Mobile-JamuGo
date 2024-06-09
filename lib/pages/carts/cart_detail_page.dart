@@ -128,7 +128,7 @@ class _CartDetailPageState extends State<CartDetailPage> {
       appBar: AppBar(
         title: Text(
           'Keranjang Anda',
-          style: GoogleFonts.pacifico(),
+          style: GoogleFonts.poppins(fontWeight: FontWeight.w400),
         ),
         backgroundColor: Colors.green,
       ),
