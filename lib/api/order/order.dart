@@ -11,7 +11,7 @@ class OrderApi {
     return token;
   }
 
-  static Future<OrderResponse> createOrder() async {
+  static Future<CreateOrderResponse> createOrder() async {
     final token = await getToken();
     final response = await dio.post(
       '/order',
@@ -23,29 +23,163 @@ class OrderApi {
       ),
     );
 
-    return OrderResponse.fromJson(response.data);
+    return CreateOrderResponse.fromJson(response.data);
+  }
+
+  static Future<OrderListResponse> getOrdersByUser() async {
+    final token = await getToken();
+    final response = await dio.get(
+      '/order',
+      options: Options(
+        validateStatus: (status) => true,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      ),
+    );
+
+    return OrderListResponse.fromJson(response.data);
+  }
+
+  static Future<OrderDetailResponse> getOrderById(int id) async {
+    final token = await getToken();
+    final response = await dio.get(
+      '/order/$id',
+      options: Options(
+        validateStatus: (status) => true,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      ),
+    );
+
+    return OrderDetailResponse.fromJson(response.data);
   }
 }
 
-class OrderResponse {
+class CreateOrderResponse {
   final Map<String, dynamic>? data;
   final String message;
   final bool isSuccess;
   final int status;
 
-  OrderResponse({
+  CreateOrderResponse({
     required this.data,
     required this.message,
     required this.isSuccess,
     required this.status,
   });
 
-  factory OrderResponse.fromJson(Map<String, dynamic> json) {
-    return OrderResponse(
+  factory CreateOrderResponse.fromJson(Map<String, dynamic> json) {
+    return CreateOrderResponse(
       data: json['data'],
       message: json['message'],
       isSuccess: json['isSuccess'],
       status: json['status'],
+    );
+  }
+}
+
+class OrderListResponse {
+  final List<Order> orders;
+  final String message;
+  final bool isSuccess;
+  final int status;
+
+  OrderListResponse({
+    required this.orders,
+    required this.message,
+    required this.isSuccess,
+    required this.status,
+  });
+
+  factory OrderListResponse.fromJson(Map<String, dynamic> json) {
+    return OrderListResponse(
+      orders: (json['data'] as List).map((i) => Order.fromJson(i)).toList(),
+      message: json['message'],
+      isSuccess: json['isSuccess'],
+      status: json['status'],
+    );
+  }
+}
+
+class OrderDetailResponse {
+  final Order? data;
+  final String message;
+  final bool isSuccess;
+  final int status;
+
+  OrderDetailResponse({
+    required this.data,
+    required this.message,
+    required this.isSuccess,
+    required this.status,
+  });
+
+  factory OrderDetailResponse.fromJson(Map<String, dynamic> json) {
+    return OrderDetailResponse(
+      data: json['data'] != null ? Order.fromJson(json['data']) : null,
+      message: json['message'],
+      isSuccess: json['isSuccess'],
+      status: json['status'],
+    );
+  }
+}
+
+class Order {
+  final int pkid;
+  final int userPkid;
+  final String status;
+  final double totalPrice;
+  final String createdBy;
+  final String createdDate;
+  final List<OrderItem> items;
+
+  Order({
+    required this.pkid,
+    required this.userPkid,
+    required this.status,
+    required this.totalPrice,
+    required this.createdBy,
+    required this.createdDate,
+    required this.items,
+  });
+
+  factory Order.fromJson(Map<String, dynamic> json) {
+    return Order(
+      pkid: json['pkid'],
+      userPkid: json['user_pkid'],
+      status: json['status'],
+      totalPrice: double.parse(json['total_price'].toString()),
+      createdBy: json['created_by'],
+      createdDate: json['created_date'],
+      items: (json['items'] as List).map((i) => OrderItem.fromJson(i)).toList(),
+    );
+  }
+}
+
+class OrderItem {
+  final int pkid;
+  final int orderPkid;
+  final int menuPkid;
+  final int quantity;
+  final double price;
+
+  OrderItem({
+    required this.pkid,
+    required this.orderPkid,
+    required this.menuPkid,
+    required this.quantity,
+    required this.price,
+  });
+
+  factory OrderItem.fromJson(Map<String, dynamic> json) {
+    return OrderItem(
+      pkid: json['pkid'],
+      orderPkid: json['order_pkid'],
+      menuPkid: json['menu_pkid'],
+      quantity: json['quantity'],
+      price: double.parse(json['price'].toString()),
     );
   }
 }

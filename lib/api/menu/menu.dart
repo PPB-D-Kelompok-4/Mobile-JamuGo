@@ -40,7 +40,7 @@ class MenuApi {
       ),
     );
 
-    return Menu.fromJson(response.data);
+    return Menu.fromJson(response.data['data']);
   }
 
   static Future<MenuResponse> createMenu({

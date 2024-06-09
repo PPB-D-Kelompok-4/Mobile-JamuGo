@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:jamugo/api/cart/cart.dart';
 import 'package:jamugo/components/cart_item_counter.dart';
@@ -27,14 +28,15 @@ class _CartDetailPageState extends State<CartDetailPage> {
   }
 
   String _formatPrice(double price) {
-    final formatCurrency = NumberFormat.currency(
-        locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
+    final formatCurrency =
+        NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
     return formatCurrency.format(price);
   }
 
   double _calculateTotal(List<dynamic> items) {
     double total = items.fold(0, (sum, item) {
-      return sum + (double.parse(item['price'].toString())) * (item['quantity'] as int);
+      return sum +
+          (double.parse(item['price'].toString())) * (item['quantity'] as int);
     });
     return total - discount;
   }
@@ -97,6 +99,7 @@ class _CartDetailPageState extends State<CartDetailPage> {
           backgroundColor: Colors.green,
           textColor: Colors.white,
         );
+        GoRouter.of(context).go('/order');
         setState(() {
           cartFuture = CartApi.getCartByUser();
         });
@@ -173,7 +176,8 @@ class _CartDetailPageState extends State<CartDetailPage> {
                       return FutureBuilder<Menu>(
                         future: menuDetails[menuPkid],
                         builder: (context, menuSnapshot) {
-                          if (menuSnapshot.connectionState == ConnectionState.waiting) {
+                          if (menuSnapshot.connectionState ==
+                              ConnectionState.waiting) {
                             return const Center(
                               child: CircularProgressIndicator(
                                 color: Colors.green,
@@ -200,15 +204,18 @@ class _CartDetailPageState extends State<CartDetailPage> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(15),
                                 ),
-                                margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                                margin: const EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: 15),
                                 child: Padding(
                                   padding: const EdgeInsets.all(10),
                                   child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       if (menuImageUrl.isNotEmpty)
                                         ClipRRect(
-                                          borderRadius: BorderRadius.circular(10),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                           child: Image.network(
                                             menuImageUrl,
                                             width: 100,
@@ -219,34 +226,41 @@ class _CartDetailPageState extends State<CartDetailPage> {
                                       const SizedBox(width: 10),
                                       Expanded(
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Text(
                                               menuName,
                                               style: const TextStyle(
-                                                  fontSize: 18, fontWeight: FontWeight.bold),
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold),
                                             ),
                                             const SizedBox(height: 5),
                                             Text(
                                               _formatPrice(price),
                                               style: const TextStyle(
-                                                  fontSize: 16, fontWeight: FontWeight.w500),
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500),
                                             ),
                                             const SizedBox(height: 10),
                                             CartItemCounter(
                                               quantity: quantity,
                                               onAdd: () {
                                                 setState(() {
-                                                  quantities[itemId] = quantity + 1;
+                                                  quantities[itemId] =
+                                                      quantity + 1;
                                                 });
-                                                _updateCartItem(menuPkid, quantity + 1);
+                                                _updateCartItem(
+                                                    menuPkid, quantity + 1);
                                               },
                                               onRemove: () {
                                                 if (quantity > 0) {
                                                   setState(() {
-                                                    quantities[itemId] = quantity - 1;
+                                                    quantities[itemId] =
+                                                        quantity - 1;
                                                   });
-                                                  _updateCartItem(menuPkid, quantity - 1);
+                                                  _updateCartItem(
+                                                      menuPkid, quantity - 1);
                                                 }
                                               },
                                             ),
@@ -254,8 +268,10 @@ class _CartDetailPageState extends State<CartDetailPage> {
                                         ),
                                       ),
                                       IconButton(
-                                        icon: const Icon(Icons.delete, color: Colors.red),
-                                        onPressed: () => _deleteCartItem(itemId),
+                                        icon: const Icon(Icons.delete,
+                                            color: Colors.red),
+                                        onPressed: () =>
+                                            _deleteCartItem(itemId),
                                       ),
                                     ],
                                   ),
@@ -277,7 +293,8 @@ class _CartDetailPageState extends State<CartDetailPage> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
-                        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 15, horizontal: 20),
                       ),
                       onPressed: () {
                         _createOrder();

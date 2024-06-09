@@ -7,6 +7,7 @@ import 'package:jamugo/pages/menus/home_page.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jamugo/pages/auth/landing_page.dart';
 import 'package:jamugo/pages/auth/login_page.dart';
+import 'package:jamugo/pages/orders/order_detail_page.dart';
 import 'package:jamugo/pages/orders/order_page.dart';
 import 'package:jamugo/pages/profiles/profile_edit_page.dart';
 // import 'package:jamugo/pages/profiles/profile_page.dart';
@@ -58,6 +59,13 @@ class MyApp extends StatelessWidget {
       GoRoute(
         path: '/order',
         builder: (context, state) => const OrderPage(),
+      ),
+      GoRoute(
+        path: '/order_detail',
+        builder: (context, state) {
+          final orderId = state.extra as int;
+          return OrderDetailPage(orderId: orderId);
+        },
       ),
       GoRoute(
         path: '/cart',
