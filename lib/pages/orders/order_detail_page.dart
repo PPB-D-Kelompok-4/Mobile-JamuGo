@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:jamugo/api/order/order.dart';
 import 'package:jamugo/api/menu/menu.dart';
 import 'package:intl/intl.dart';
+import 'package:jamugo/utils/shared_preferences.dart';
 
 class OrderDetailPage extends StatefulWidget {
   final int orderId;
@@ -16,12 +17,21 @@ class OrderDetailPage extends StatefulWidget {
 
 class _OrderDetailPageState extends State<OrderDetailPage> {
   late Future<OrderDetailResponse> orderDetailFuture;
+  late String role;
   Map<int, Future<Menu>> menuDetails = {};
 
   @override
   void initState() {
     super.initState();
     orderDetailFuture = OrderApi.getOrderById(widget.orderId);
+    _getRole();
+  }
+
+  Future<void> _getRole() async {
+    final getRole = await SharedPreferencesUtil.readData(key: 'role');
+    setState(() {
+      role = getRole ?? '';
+    });
   }
 
   String _formatPrice(double price) {
@@ -57,7 +67,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     try {
       final response = await OrderApi.cancelOrder(orderId);
       if (response.isSuccess) {
-        _showToast('Order canceled successfully',
+        _showToast('Order cancelled successfully',
             backgroundColor: Colors.green);
         setState(() {
           orderDetailFuture = OrderApi.getOrderById(orderId);
@@ -186,7 +196,10 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                     ],
                   ),
                 ),
-                if (order.status == 'pending')
+                if ((role == 'user' && order.status == 'pending') ||
+                    (role == 'admin' &&
+                        order.status != 'completed' &&
+                        order.status != 'cancelled'))
                   Positioned(
                     bottom: 20,
                     right: 20,
