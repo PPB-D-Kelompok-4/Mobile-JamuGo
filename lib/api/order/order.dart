@@ -41,6 +41,26 @@ class OrderApi {
     return OrderListResponse.fromJson(response.data);
   }
 
+  static Future<OrderListResponse> getOrdersByAdmin(
+      String status, bool sortByDate) async {
+    final token = await getToken();
+    final response = await dio.get(
+      '/order/admin/all',
+      queryParameters: {
+        'status': status,
+        'sortByDate': sortByDate,
+      },
+      options: Options(
+        validateStatus: (status) => true,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      ),
+    );
+
+    return OrderListResponse.fromJson(response.data);
+  }
+
   static Future<OrderDetailResponse> getOrderById(int id) async {
     final token = await getToken();
     final response = await dio.get(
@@ -54,6 +74,21 @@ class OrderApi {
     );
 
     return OrderDetailResponse.fromJson(response.data);
+  }
+
+  static Future<CreateOrderResponse> cancelOrder(int id) async {
+    final token = await getToken();
+    final response = await dio.put(
+      '/order/cancel/$id',
+      options: Options(
+        validateStatus: (status) => true,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      ),
+    );
+
+    return CreateOrderResponse.fromJson(response.data);
   }
 }
 
