@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
@@ -100,6 +102,7 @@ class _CartDetailPageState extends State<CartDetailPage> {
           textColor: Colors.white,
         );
         GoRouter.of(context).go('/order');
+        GoRouter.of(context).push('/order_detail', extra: response.orderId);
         setState(() {
           cartFuture = CartApi.getCartByUser();
         });

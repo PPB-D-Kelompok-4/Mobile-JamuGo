@@ -62,17 +62,20 @@ class CreateOrderResponse {
   final String message;
   final bool isSuccess;
   final int status;
+  final int orderId;
 
   CreateOrderResponse({
     required this.data,
     required this.message,
     required this.isSuccess,
     required this.status,
+    required this.orderId,
   });
 
   factory CreateOrderResponse.fromJson(Map<String, dynamic> json) {
     return CreateOrderResponse(
       data: json['data'],
+      orderId: json['data'] != null ? json['data']['pkid'] : 0,
       message: json['message'],
       isSuccess: json['isSuccess'],
       status: json['status'],

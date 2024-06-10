@@ -29,8 +29,10 @@ class _OrderPageState extends State<OrderPage> {
 
   String _formatDate(String date) {
     final dateTime = DateTime.parse(date);
+    final addoffset = dateTime.add(const Duration(hours: 7));
     final format = DateFormat('dd MMMM yyyy HH:mm');
-    return format.format(dateTime);
+
+    return format.format(addoffset);
   }
 
   void _showToast(String message, {Color backgroundColor = Colors.red}) {
