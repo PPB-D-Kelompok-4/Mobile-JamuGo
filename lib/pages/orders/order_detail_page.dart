@@ -22,7 +22,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   int currentStep = 0;
   bool isCancel = false;
   Map<int, Future<Menu>> menuDetails = {};
-  String role = '';
+  // String role = '';
 
   @override
   void initState() {
