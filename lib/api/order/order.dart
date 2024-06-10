@@ -206,6 +206,7 @@ class Order {
   final String createdBy;
   final String createdDate;
   final List<OrderItem> items;
+  final OrderStatus? orderStatus;
 
   Order({
     required this.pkid,
@@ -215,6 +216,7 @@ class Order {
     required this.createdBy,
     required this.createdDate,
     required this.items,
+    this.orderStatus,
   });
 
   factory Order.fromJson(Map<String, dynamic> json) {
@@ -226,6 +228,29 @@ class Order {
       createdBy: json['created_by'],
       createdDate: json['created_date'],
       items: (json['items'] as List).map((i) => OrderItem.fromJson(i)).toList(),
+      orderStatus: json['orderStatus'] != null
+          ? OrderStatus.fromJson(json['orderStatus'])
+          : null,
+    );
+  }
+}
+
+class OrderStatus {
+  final int pkid;
+  final int orderPkid;
+  final String status;
+
+  OrderStatus({
+    required this.pkid,
+    required this.orderPkid,
+    required this.status,
+  });
+
+  factory OrderStatus.fromJson(Map<String, dynamic> json) {
+    return OrderStatus(
+      pkid: json['pkid'],
+      orderPkid: json['order_pkid'],
+      status: json['status'],
     );
   }
 }

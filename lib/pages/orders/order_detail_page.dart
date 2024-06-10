@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:im_stepper/stepper.dart';
 import 'package:jamugo/api/order/order.dart';
 import 'package:jamugo/api/menu/menu.dart';
 import 'package:jamugo/utils/shared_preferences.dart';
@@ -17,6 +18,9 @@ class OrderDetailPage extends StatefulWidget {
 
 class _OrderDetailPageState extends State<OrderDetailPage> {
   late Future<OrderDetailResponse> orderDetailFuture;
+  String role = '';
+  int currentStep = 0;
+  bool isCancel = false;
   Map<int, Future<Menu>> menuDetails = {};
   String role = '';
 
@@ -25,6 +29,17 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     super.initState();
     _getRole();
     orderDetailFuture = OrderApi.getOrderById(widget.orderId);
+    _getRole();
+    orderDetailFuture.then((response) {
+      if (response.data != null) {
+        _getStep(response.data!.status);
+      }
+      if (response.data!.status == 'cancelled') {
+        setState(() {
+          isCancel = true;
+        });
+      }
+    });
   }
 
   Future<void> _getRole() async {
@@ -42,8 +57,25 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
 
   String _formatDate(String date) {
     final dateTime = DateTime.parse(date);
-    final format = DateFormat('yyyy-MM-dd HH:mm');
+    final format = DateFormat('dd MMMM yyyy HH:mm');
     return format.format(dateTime);
+  }
+
+  String _formatStatus(String status) {
+    switch (status) {
+      case 'order_placed':
+        return 'Order Placed';
+      case 'preparing':
+        return 'Preparing';
+      case 'ready_for_pickup':
+        return 'Ready for Pickup';
+      case 'picked_up':
+        return 'Picked Up';
+      case 'cancelled':
+        return 'Cancelled';
+      default:
+        return '';
+    }
   }
 
   void _showToast(String message, {Color backgroundColor = Colors.red}) {
@@ -77,6 +109,22 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
       }
     } catch (error) {
       _showToast('Failed to cancel order: $error');
+    }
+  }
+
+  void _getStep(String status) {
+    if (status == 'pending') {
+      setState(() {
+        currentStep = 0;
+      });
+    } else if (status == 'process') {
+      setState(() {
+        currentStep = 1;
+      });
+    } else if (status == 'completed' || status == 'cancelled') {
+      setState(() {
+        currentStep = 2;
+      });
     }
   }
 
@@ -119,7 +167,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Order Detail',
+          'Order #${widget.orderId}',
           style: GoogleFonts.poppins(fontWeight: FontWeight.w400),
         ),
         backgroundColor: Colors.green,
@@ -153,11 +201,39 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'Order #${order.pkid}',
-                        style: const TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                      Center(
+                        child: Column(
+                          children: [
+                            IconStepper(
+                              enableStepTapping: false,
+                              enableNextPreviousButtons: false,
+                              icons: [
+                                const Icon(Icons.access_time_filled_sharp),
+                                const Icon(Icons.local_drink),
+                                isCancel
+                                    ? const Icon(Icons.cancel)
+                                    : const Icon(Icons.check_circle)
+                              ],
+                              activeStep: currentStep,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                const Text('Pending'),
+                                const Text('Process'),
+                                Text(isCancel ? 'Cancelled' : 'Completed'),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
+                      const SizedBox(height: 10),
+                      if (order.status == 'process')
+                        Text(
+                          'Status: ${_formatStatus(order.orderStatus!.status)}',
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w500),
+                        ),
                       const SizedBox(height: 5),
                       Text(
                         'Created Date: ${_formatDate(order.createdDate)}',
