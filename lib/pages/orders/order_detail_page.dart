@@ -145,6 +145,40 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     }
   }
 
+  Future<void> _processOrder(int orderId) async {
+    try {
+      final response = await OrderApi.processOrder(orderId);
+      if (response.isSuccess) {
+        _showToast('Order processed successfully',
+            backgroundColor: Colors.green);
+        setState(() {
+          orderDetailFuture = OrderApi.getOrderById(orderId);
+        });
+      } else {
+        _showToast('Failed to process order: ${response.message}');
+      }
+    } catch (error) {
+      _showToast('Failed to process order: $error');
+    }
+  }
+
+  Future<void> _finishOrder(int orderId) async {
+    try {
+      final response = await OrderApi.finishOrder(orderId);
+      if (response.isSuccess) {
+        _showToast('Order finished successfully',
+            backgroundColor: Colors.green);
+        setState(() {
+          orderDetailFuture = OrderApi.getOrderById(orderId);
+        });
+      } else {
+        _showToast('Failed to finish order: ${response.message}');
+      }
+    } catch (error) {
+      _showToast('Failed to finish order: $error');
+    }
+  }
+
   Future<void> _updateOrderStatus(int orderId, String status) async {
     try {
       final response = await OrderApi.updateOrderStatus(orderId, status);
@@ -307,8 +341,8 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                   ),
                 ),
                 if (role == 'admin' &&
-                        order.status != 'completed' &&
-                        order.status != 'cancelled')
+                    order.status != 'completed' &&
+                    order.status != 'cancelled')
                   Positioned(
                     bottom: 20,
                     right: 20,
@@ -324,17 +358,14 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.red,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    15),
+                                borderRadius: BorderRadius.circular(15),
                               ),
                             ),
                             child: const Text(
                               'Cancel Order',
                               textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize:
-                                      12),
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 12),
                             ),
                           ),
                         ),
@@ -349,17 +380,14 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.blue,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    15),
+                                borderRadius: BorderRadius.circular(15),
                               ),
                             ),
                             child: const Text(
                               'Update to Preparing',
                               textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize:
-                                      12),
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 12),
                             ),
                           ),
                         ),
@@ -375,17 +403,14 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.orange,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    15),
+                                borderRadius: BorderRadius.circular(15),
                               ),
                             ),
                             child: const Text(
                               'Update to Ready for Pickup',
                               textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize:
-                                      12),
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 12),
                             ),
                           ),
                         ),
@@ -400,24 +425,73 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.green,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    15),
+                                borderRadius: BorderRadius.circular(15),
                               ),
                             ),
                             child: const Text(
                               'Update to Picked Up',
                               textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize:
-                                      12),
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 12),
                             ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                if (role == 'user' && order.status == 'pending')
+                if (role == 'admin' && order.status == 'pending')
+                  Positioned(
+                    bottom: 20,
+                    left: 20,
+                    child: Column(
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            _processOrder(order.pkid);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 15, horizontal: 20),
+                          ),
+                          child: const Text(
+                            'Process Order',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (role == 'admin' && order.status == 'process')
+                  Positioned(
+                    bottom: 20,
+                    left: 20,
+                    child: Column(
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            _finishOrder(order.pkid);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 15, horizontal: 20),
+                          ),
+                          child: const Text(
+                            'Finish Order',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (role == 'user' && order.status == 'pending')
                   Positioned(
                     bottom: 20,
                     right: 20,

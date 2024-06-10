@@ -109,6 +109,36 @@ class OrderApi {
     return CreateOrderResponse.fromJson(response.data);
   }
 
+    static Future<CreateOrderResponse> processOrder(int id) async {
+    final token = await getToken();
+    final response = await dio.put(
+      '/order/admin/process/$id',
+      options: Options(
+        validateStatus: (status) => true,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      ),
+    );
+
+    return CreateOrderResponse.fromJson(response.data);
+  }
+
+    static Future<CreateOrderResponse> finishOrder(int id) async {
+    final token = await getToken();
+    final response = await dio.put(
+      '/order/admin/finish/$id',
+      options: Options(
+        validateStatus: (status) => true,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      ),
+    );
+
+    return CreateOrderResponse.fromJson(response.data);
+  }
+
   static Future<CreateOrderResponse> updateOrderStatus(int id, String status) async {
     final token = await getToken();
     final response = await dio.put(
