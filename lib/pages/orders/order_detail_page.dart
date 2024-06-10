@@ -3,8 +3,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:jamugo/api/order/order.dart';
 import 'package:jamugo/api/menu/menu.dart';
-import 'package:intl/intl.dart';
 import 'package:jamugo/utils/shared_preferences.dart';
+import 'package:intl/intl.dart';
 
 class OrderDetailPage extends StatefulWidget {
   final int orderId;
@@ -17,14 +17,14 @@ class OrderDetailPage extends StatefulWidget {
 
 class _OrderDetailPageState extends State<OrderDetailPage> {
   late Future<OrderDetailResponse> orderDetailFuture;
-  late String role;
   Map<int, Future<Menu>> menuDetails = {};
+  String role = '';
 
   @override
   void initState() {
     super.initState();
-    orderDetailFuture = OrderApi.getOrderById(widget.orderId);
     _getRole();
+    orderDetailFuture = OrderApi.getOrderById(widget.orderId);
   }
 
   Future<void> _getRole() async {
@@ -63,9 +63,9 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     return await menuDetails[menuPkid]!;
   }
 
-  Future<void> _cancelOrder(int orderId) async {
+  Future<void> _cancelOrderByAdmin(int orderId) async {
     try {
-      final response = await OrderApi.cancelOrder(orderId);
+      final response = await OrderApi.cancelOrderByAdmin(orderId);
       if (response.isSuccess) {
         _showToast('Order cancelled successfully',
             backgroundColor: Colors.green);
@@ -77,6 +77,40 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
       }
     } catch (error) {
       _showToast('Failed to cancel order: $error');
+    }
+  }
+
+  Future<void> _cancelOrder(int orderId) async {
+    try {
+      final response = await OrderApi.cancelOrder(orderId);
+      if (response.isSuccess) {
+        _showToast('Order canceled successfully',
+            backgroundColor: Colors.green);
+        setState(() {
+          orderDetailFuture = OrderApi.getOrderById(orderId);
+        });
+      } else {
+        _showToast('Failed to cancel order: ${response.message}');
+      }
+    } catch (error) {
+      _showToast('Failed to cancel order: $error');
+    }
+  }
+
+  Future<void> _updateOrderStatus(int orderId, String status) async {
+    try {
+      final response = await OrderApi.updateOrderStatus(orderId, status);
+      if (response.isSuccess) {
+        _showToast('Order status updated to $status',
+            backgroundColor: Colors.green);
+        setState(() {
+          orderDetailFuture = OrderApi.getOrderById(orderId);
+        });
+      } else {
+        _showToast('Failed to update status: ${response.message}');
+      }
+    } catch (error) {
+      _showToast('Failed to update status: $error');
     }
   }
 
@@ -138,7 +172,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                       ),
                       const SizedBox(height: 5),
                       Text(
-                        'Status: ${order.status}',
+                        'Status: ${order.status == 'process' ? 'Process' : order.status == 'completed' ? 'Completed' : order.status == 'pending' ? 'Pending' : order.status == 'preparing' ? 'Preparing' : order.status == 'order_placed' ? 'Order Placed' : order.status == 'ready_for_pickup' ? 'Ready For Pickup' : order.status == 'cancelled' ? 'Cancelled' : order.status == 'picked_up' ? 'Picked Up' : order.status}',
                         style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w500),
                       ),
@@ -196,29 +230,141 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                     ],
                   ),
                 ),
-                if ((role == 'user' && order.status == 'pending') ||
-                    (role == 'admin' &&
+                if (role == 'admin' &&
                         order.status != 'completed' &&
-                        order.status != 'cancelled'))
+                        order.status != 'cancelled')
                   Positioned(
                     bottom: 20,
                     right: 20,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        _cancelOrder(order.pkid);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          width: 200,
+                          height: 40,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              _cancelOrderByAdmin(order.pkid);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    15),
+                              ),
+                            ),
+                            child: const Text(
+                              'Cancel Order',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize:
+                                      12),
+                            ),
+                          ),
                         ),
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 15, horizontal: 20),
-                      ),
-                      child: const Text(
-                        'Cancel Order',
-                        style: TextStyle(color: Colors.white),
-                      ),
+                        const SizedBox(height: 10),
+                        SizedBox(
+                          width: 200,
+                          height: 40,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              _updateOrderStatus(order.pkid, 'preparing');
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    15),
+                              ),
+                            ),
+                            child: const Text(
+                              'Update to Preparing',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize:
+                                      12),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        SizedBox(
+                          width: 200,
+                          height: 40,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              _updateOrderStatus(
+                                  order.pkid, 'ready_for_pickup');
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.orange,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    15),
+                              ),
+                            ),
+                            child: const Text(
+                              'Update to Ready for Pickup',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize:
+                                      12),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        SizedBox(
+                          width: 200,
+                          height: 40,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              _updateOrderStatus(order.pkid, 'picked_up');
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.green,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    15),
+                              ),
+                            ),
+                            child: const Text(
+                              'Update to Picked Up',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize:
+                                      12),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                if (role == 'user' && order.status == 'pending')
+                  Positioned(
+                    bottom: 20,
+                    right: 20,
+                    child: Column(
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            _cancelOrder(order.pkid);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 15, horizontal: 20),
+                          ),
+                          child: const Text(
+                            'Cancel Order',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
               ],
