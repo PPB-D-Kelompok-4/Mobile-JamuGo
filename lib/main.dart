@@ -15,6 +15,7 @@ import 'package:jamugo/pages/auth/register_page.dart';
 import 'package:jamugo/pages/menus/update_menu_page.dart';
 import 'package:jamugo/api/menu/menu.dart';
 import 'package:jamugo/pages/profiles/profile_view_page.dart';
+import 'package:jamugo/pages/transaction/transaction_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -65,6 +66,13 @@ class MyApp extends StatelessWidget {
         builder: (context, state) {
           final orderId = state.extra as int;
           return OrderDetailPage(orderId: orderId);
+        },
+      ),
+      GoRoute(
+        path: '/transaction',
+        builder: (context, state) {
+          final orderId = state.extra as int;
+          return TransactionPage(orderId: orderId);
         },
       ),
       GoRoute(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:im_stepper/stepper.dart';
 import 'package:jamugo/api/order/order.dart';
@@ -22,7 +23,6 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   int currentStep = 0;
   bool isCancel = false;
   Map<int, Future<Menu>> menuDetails = {};
-  // String role = '';
 
   @override
   void initState() {
@@ -465,7 +465,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                       ],
                     ),
                   ),
-                  if (role == 'admin' && order.status == 'process')
+                if (role == 'admin' && order.status == 'process')
                   Positioned(
                     bottom: 20,
                     left: 20,
@@ -491,7 +491,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                       ],
                     ),
                   ),
-                  if (role == 'user' && order.status == 'pending')
+                if (role == 'user' && order.status == 'pending')
                   Positioned(
                     bottom: 20,
                     right: 20,
@@ -515,6 +515,31 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                           ),
                         ),
                       ],
+                    ),
+                  ),
+                if (role == 'customer' && order.status == 'pending')
+                  Positioned(
+                    bottom: 20,
+                    right: 20,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        GoRouter.of(context).push(
+                          '/transaction',
+                          extra: order.pkid,
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 15, horizontal: 20),
+                      ),
+                      child: const Text(
+                        'Pay',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ),
               ],
