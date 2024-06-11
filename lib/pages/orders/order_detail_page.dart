@@ -491,7 +491,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                       ],
                     ),
                   ),
-                if (role == 'user' && order.status == 'pending')
+                if (role == 'customer' && order.status == 'pending')
                   Positioned(
                     bottom: 20,
                     right: 20,

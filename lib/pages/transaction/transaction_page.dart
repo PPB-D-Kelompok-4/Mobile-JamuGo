@@ -17,7 +17,7 @@ class TransactionPage extends StatefulWidget {
 
 class _TransactionPageState extends State<TransactionPage> {
   late Future<TransactionResponse> transactionFuture;
-  String selectedPaymentMethod = 'Cash'; // Set a default value
+  String selectedPaymentMethod = 'Cash';
 
   @override
   void initState() {
