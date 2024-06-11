@@ -71,8 +71,12 @@ class MyApp extends StatelessWidget {
       GoRoute(
         path: '/transaction',
         builder: (context, state) {
-          final orderId = state.extra as int;
-          return TransactionPage(orderId: orderId);
+          final Map<String, dynamic> params =
+              state.extra as Map<String, dynamic>;
+          final orderId = params['orderId'] as int;
+          final orderPriceTotal = params['orderPriceTotal'] as String;
+          return TransactionPage(
+              orderId: orderId, orderPriceTotal: orderPriceTotal);
         },
       ),
       GoRoute(
