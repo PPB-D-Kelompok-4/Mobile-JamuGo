@@ -38,7 +38,8 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
         if (response.data != null) {
           _getStep(response.data!.status);
         }
-        if (response.data!.status == 'cancelled') {
+        if (response.data!.orderStatus!.status == 'cancelled' ||
+            response.data!.status == 'cancelled') {
           setState(() {
             isCancel = true;
           });
@@ -64,23 +65,6 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     final dateTime = DateTime.parse(date);
     final format = DateFormat('dd MMMM yyyy HH:mm');
     return format.format(dateTime);
-  }
-
-  String _formatStatus(String status) {
-    switch (status) {
-      case 'order_placed':
-        return 'Order Placed';
-      case 'preparing':
-        return 'Preparing';
-      case 'ready_for_pickup':
-        return 'Ready for Pickup';
-      case 'picked_up':
-        return 'Picked Up';
-      case 'cancelled':
-        return 'Cancelled';
-      default:
-        return '';
-    }
   }
 
   double _calculateTax(double totalPrice) {
@@ -120,18 +104,36 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   }
 
   void _getStep(String status) {
-    if (status == 'pending') {
-      setState(() {
-        currentStep = 0;
-      });
-    } else if (status == 'process') {
-      setState(() {
-        currentStep = 1;
-      });
-    } else if (status == 'completed' || status == 'cancelled') {
-      setState(() {
-        currentStep = 2;
-      });
+    switch (status) {
+      case 'order_placed':
+        setState(() {
+          currentStep = 0;
+        });
+        break;
+      case 'preparing':
+        setState(() {
+          currentStep = 1;
+        });
+        break;
+      case 'ready_for_pickup':
+        setState(() {
+          currentStep = 2;
+        });
+        break;
+      case 'picked_up':
+        setState(() {
+          currentStep = 3;
+        });
+        break;
+      case 'cancelled':
+        setState(() {
+          currentStep = 3;
+        });
+        break;
+      default:
+        setState(() {
+          currentStep = 0;
+        });
     }
   }
 
@@ -233,7 +235,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
               return Stack(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -241,61 +243,58 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                           child: Column(
                             children: [
                               IconStepper(
+                                stepPadding: 0,
+                                lineLength: 40,
                                 enableStepTapping: false,
                                 enableNextPreviousButtons: false,
                                 icons: [
-                                  const Icon(Icons.access_time_filled_sharp),
-                                  const Icon(Icons.local_drink),
+                                  const Icon(Icons.notes_outlined),
+                                  const Icon(Icons.coffee_maker_rounded),
+                                  const Icon(Icons.shopping_bag),
                                   isCancel
                                       ? const Icon(Icons.cancel)
-                                      : const Icon(Icons.check_circle)
+                                      : const Icon(Icons.check_circle),
                                 ],
                                 activeStep: currentStep,
+                                lineColor: Colors.green,
+                                activeStepColor: Colors.green,
+                                stepColor: Colors.white,
+                                stepRadius: 20,
                               ),
                               Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  const Text('Pending'),
-                                  const Text('Process'),
-                                  Text(isCancel ? 'Cancelled' : 'Completed'),
+                                  const Expanded(
+                                    child: const Text(
+                                      'Order Placed',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  const Expanded(
+                                    child: Text(
+                                      'Preparing',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  const Expanded(
+                                    child: Text(
+                                      'Ready For Pickup',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      isCancel ? 'Cancelled' : 'Picked Up',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ],
                           ),
                         ),
-                        const SizedBox(height: 10),
-                        if (order.status == 'process')
-                          Text(
-                            'Status: ${_formatStatus(order.orderStatus!.status)}',
-                            style: const TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w500),
-                          ),
-                        const SizedBox(height: 5),
-                        Text(
-                          'Created Date: ${_formatDate(order.createdDate)}',
-                          style: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w500),
-                        ),
-                        const SizedBox(height: 5),
-                        Text(
-                          'Tax: ${_formatPrice(tax)}',
-                          style: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w500),
-                        ),
-                        const SizedBox(height: 5),
-                        Text(
-                          'Total Price: ${_formatPrice(order.totalPrice)}',
-                          style: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w500),
-                        ),
-                        const SizedBox(height: 5),
-                        Text(
-                          'Status: ${order.status == 'process' ? 'Process' : order.status == 'completed' ? 'Completed' : order.status == 'pending' ? 'Pending' : order.status == 'preparing' ? 'Preparing' : order.status == 'order_placed' ? 'Order Placed' : order.status == 'ready_for_pickup' ? 'Ready For Pickup' : order.status == 'cancelled' ? 'Cancelled' : order.status == 'picked_up' ? 'Picked Up' : order.status}',
-                          style: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w500),
-                        ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 20),
                         const Text(
                           'Items',
                           style: TextStyle(
@@ -346,6 +345,60 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                               );
                             },
                           ),
+                        ),
+                        const Divider(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text('Tax (11%)'),
+                            Text(_formatPrice(tax)),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text('Total Price'),
+                            Text(
+                              _formatPrice(order.totalPrice),
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        const Text(
+                          'Order Details',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 5),
+                        const Divider(),
+                        const SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text('Order ID'),
+                            Text(order.pkid.toString()),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text('Order Date'),
+                            Text(_formatDate(order.createdDate)),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text('Ordered By'),
+                            Text(order.createdBy),
+                          ],
                         ),
                       ],
                     ),
@@ -505,26 +558,22 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                     Positioned(
                       bottom: 20,
                       left: 20,
-                      child: Column(
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              _cancelOrder(order.pkid);
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.red,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 15, horizontal: 20),
-                            ),
-                            child: const Text(
-                              'Cancel Order',
-                              style: TextStyle(color: Colors.white),
-                            ),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          _cancelOrder(order.pkid);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
                           ),
-                        ],
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 20),
+                        ),
+                        child: const Text(
+                          'Cancel Order',
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                     ),
                   if (role == 'customer' && order.status == 'pending')
