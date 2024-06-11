@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -51,7 +49,7 @@ class _ProfileViewPageState extends State<ProfileViewPage> {
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to load user data')),
+        const SnackBar(content: Text('Failed to load user data')),
       );
     }
   }
@@ -86,37 +84,42 @@ class _ProfileViewPageState extends State<ProfileViewPage> {
               child: Stack(
                 alignment: Alignment.bottomRight,
                 children: [
-                  CircleAvatar(
-                    radius: 80,
-                    backgroundColor: Colors.green[100],
-                    backgroundImage: _networkProfileImage != null
-                        ? FileImage(_networkProfileImage!)
-                        : null,
-                    child: _networkProfileImage == null
-                        ? Icon(Icons.person, size: 80, color: Colors.grey[600])
-                        : null,
+                  FutureBuilder(
+                    future:_loadUserData() ,
+                    builder: (context,  snapshot){
+                      return CircleAvatar(
+                        radius: 80,
+                        backgroundColor: Colors.green[100],
+                        backgroundImage: _networkProfileImage != null
+                            ? FileImage(_networkProfileImage!)
+                            : null,
+                        child: _networkProfileImage == null
+                            ? Icon(Icons.person, size: 80, color: Colors.grey[600])
+                            : null,
+                      );
+                    }
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             _buildProfileView(),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 GoRouter.of(context).go('/profile/edit');
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green,
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
-                textStyle: TextStyle(
+                textStyle: const TextStyle(
                   fontSize: 16,
                 ),
               ),
-              child: Text('Edit'),
+              child: const Text('Edit'),
             ),
           ],
         ),
@@ -166,10 +169,10 @@ class _ProfileViewPageState extends State<ProfileViewPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: TextStyle(color: Colors.green, fontSize: 16)),
-        SizedBox(height: 4),
-        Text(value, style: TextStyle(fontSize: 18)),
-        SizedBox(height: 16),
+        Text(label, style: const TextStyle(color: Colors.green, fontSize: 16)),
+        const SizedBox(height: 4),
+        Text(value, style: const TextStyle(fontSize: 18)),
+        const SizedBox(height: 16),
       ],
     );
   }
