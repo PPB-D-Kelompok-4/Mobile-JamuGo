@@ -44,6 +44,11 @@ class _ProfileViewPageState extends State<ProfileViewPage> {
           _networkProfileImage = imageFile;
         });
       }
+      else {
+        setState(() {
+          _networkProfileImage = null;
+        });
+      }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to load user data')),
