@@ -1,4 +1,5 @@
 {
   "java.compile.nullAnalysis.mode": "automatic",
-  "cmake.sourceDirectory": "C:/Users/helmi/jamugo/linux"
+  "cmake.sourceDirectory": "C:/Users/helmi/jamugo/linux",
+  "java.configuration.updateBuildConfiguration": "interactive"
 }

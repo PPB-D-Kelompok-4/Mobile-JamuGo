@@ -26,6 +26,7 @@ if (flutterVersionName == null) {
 android {
     namespace "com.example.jamugo"
     compileSdk flutter.compileSdkVersion
+    compileSdkVersion 34
     ndkVersion flutter.ndkVersion
 
     compileOptions {
@@ -43,7 +44,8 @@ android {
 
     defaultConfig {
         applicationId "com.example.jamugo"
-        minSdkVersion 21 
+        minSdkVersion 21
+        targetSdkVersion 34
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName

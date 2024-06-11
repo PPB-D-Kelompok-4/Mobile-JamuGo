@@ -9,6 +9,7 @@ import 'package:jamugo/components/cart_item_counter.dart';
 import 'package:intl/intl.dart';
 import 'package:jamugo/api/menu/menu.dart';
 import 'package:jamugo/api/order/order.dart';
+import 'package:jamugo/utils/notification_service.dart';
 
 class CartDetailPage extends StatefulWidget {
   const CartDetailPage({super.key});
@@ -100,6 +101,10 @@ class _CartDetailPageState extends State<CartDetailPage> {
           gravity: ToastGravity.BOTTOM,
           backgroundColor: Colors.green,
           textColor: Colors.white,
+        );
+        NotificationService.showNotification(
+          title: 'Order created',
+          body: 'Order created successfully',
         );
         GoRouter.of(context).go('/order');
         GoRouter.of(context).push('/order_detail', extra: response.orderId);

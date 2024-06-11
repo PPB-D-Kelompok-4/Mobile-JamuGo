@@ -10,16 +10,17 @@ import 'package:jamugo/pages/auth/login_page.dart';
 import 'package:jamugo/pages/orders/order_detail_page.dart';
 import 'package:jamugo/pages/orders/order_page.dart';
 import 'package:jamugo/pages/profiles/profile_edit_page.dart';
-// import 'package:jamugo/pages/profiles/profile_page.dart';
 import 'package:jamugo/pages/auth/register_page.dart';
 import 'package:jamugo/pages/menus/update_menu_page.dart';
 import 'package:jamugo/api/menu/menu.dart';
 import 'package:jamugo/pages/profiles/profile_view_page.dart';
 import 'package:jamugo/pages/transaction/transaction_page.dart';
+import 'package:jamugo/utils/notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await NotificationService.initializeNotification();
   runApp(MyApp());
 }
 
