@@ -4,8 +4,7 @@ class CardExit extends StatelessWidget {
   final Function onConfirm;
   final Function onCancel;
 
-  const CardExit({required this.onConfirm, required this.onCancel, Key? key})
-      : super(key: key);
+  const CardExit({required this.onConfirm, required this.onCancel, super.key});
 
   @override
   Widget build(BuildContext context) {

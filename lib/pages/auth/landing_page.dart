@@ -33,16 +33,17 @@ class _LandingPageState extends State<LandingPage> {
 
   Future<bool> _onWillPop() async {
     return await showDialog(
-      context: context,
-      builder: (context) => CardExit(
-        onConfirm: () {
-          Navigator.of(context).pop(true);
-        },
-        onCancel: () {
-          Navigator.of(context).pop(false);
-        },
-      ),
-    ) ?? false;
+          context: context,
+          builder: (context) => CardExit(
+            onConfirm: () {
+              GoRouter.of(context).pop(true);
+            },
+            onCancel: () {
+              GoRouter.of(context).pop(false);
+            },
+          ),
+        ) ??
+        false;
   }
 
   @override

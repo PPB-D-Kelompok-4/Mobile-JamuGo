@@ -5,7 +5,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:jamugo/api/profile/profile.dart';
 import 'package:path_provider/path_provider.dart';
 
-
 class ProfileEditPage extends StatefulWidget {
   const ProfileEditPage({super.key});
 
@@ -50,7 +49,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to load user data')),
+        const SnackBar(content: Text('Failed to load user data')),
       );
     }
   }
@@ -62,7 +61,8 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
     if (pickedFile != null) {
       final appDir = await getApplicationDocumentsDirectory();
       final fileName = pickedFile.path.split('/').last;
-      final savedImage = await File(pickedFile.path).copy('${appDir.path}/$fileName');
+      final savedImage =
+          await File(pickedFile.path).copy('${appDir.path}/$fileName');
 
       setState(() {
         _localProfileImage = savedImage;
@@ -77,11 +77,11 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
       await ProfileApi.uploadProfileImage(_localProfileImage!);
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Profile image updated')),
+        const SnackBar(content: Text('Profile image updated')),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to upload profile image')),
+        const SnackBar(content: Text('Failed to upload profile image')),
       );
     }
   }
@@ -89,15 +89,16 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   Future<void> _updateUserData() async {
     if (_formKey.currentState!.validate() && _pkid != null) {
       try {
-        await ProfileApi.updateUserData(_pkid!, _nameController.text, _addressController.text);
+        await ProfileApi.updateUserData(
+            _pkid!, _nameController.text, _addressController.text);
 
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Profile updated')),
+          const SnackBar(content: Text('Profile updated')),
         );
         Navigator.pop(context); // Navigate back to profile view page
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to update profile')),
+          const SnackBar(content: Text('Failed to update profile')),
         );
       }
     }
@@ -128,10 +129,12 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                       backgroundImage: _localProfileImage != null
                           ? FileImage(_localProfileImage!)
                           : _networkProfileImage != null
-                          ? FileImage(_networkProfileImage!)
-                          : null,
-                      child: _localProfileImage == null && _networkProfileImage == null
-                          ? Icon(Icons.person, size: 80, color: Colors.grey[600])
+                              ? FileImage(_networkProfileImage!)
+                              : null,
+                      child: _localProfileImage == null &&
+                              _networkProfileImage == null
+                          ? Icon(Icons.person,
+                              size: 80, color: Colors.grey[600])
                           : null,
                     ),
                     Container(
@@ -139,8 +142,8 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                         color: Colors.black.withOpacity(0.5),
                         shape: BoxShape.circle,
                       ),
-                      padding: EdgeInsets.all(8),
-                      child: Icon(
+                      padding: const EdgeInsets.all(8),
+                      child: const Icon(
                         Icons.camera_alt,
                         color: Colors.white,
                       ),
@@ -148,7 +151,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                   ],
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextFormField(
                 controller: _nameController,
                 decoration: InputDecoration(
@@ -166,7 +169,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextFormField(
                 controller: _addressController,
                 decoration: InputDecoration(
@@ -184,24 +187,24 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
                   _updateUserData();
                   _uploadProfileImage();
                   GoRouter.of(context).go('/profile');
                 },
-                child: Text('Save'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
-                  padding: EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  textStyle: TextStyle(
+                  textStyle: const TextStyle(
                     fontSize: 16,
-                    ),
+                  ),
                 ),
+                child: const Text('Save'),
               ),
             ],
           ),

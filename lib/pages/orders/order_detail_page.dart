@@ -494,7 +494,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                 if (role == 'customer' && order.status == 'pending')
                   Positioned(
                     bottom: 20,
-                    right: 20,
+                    left: 20,
                     child: Column(
                       children: [
                         ElevatedButton(

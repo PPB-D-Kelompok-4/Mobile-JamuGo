@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -18,7 +20,6 @@ class _ProfileViewPageState extends State<ProfileViewPage> {
   final _roleController = TextEditingController();
 
   File? _networkProfileImage;
-  int? _pkid;
 
   @override
   void initState() {
@@ -35,7 +36,6 @@ class _ProfileViewPageState extends State<ProfileViewPage> {
         _addressController.text = userData.address;
         _emailController.text = userData.email;
         _roleController.text = userData.role;
-        _pkid = userData.pkid;
       });
 
       if (userData.imageProfile != null) {
@@ -101,7 +101,6 @@ class _ProfileViewPageState extends State<ProfileViewPage> {
               onPressed: () {
                 GoRouter.of(context).go('/profile/edit');
               },
-              child: Text('Edit'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green,
                 padding: EdgeInsets.all(16),
@@ -112,6 +111,7 @@ class _ProfileViewPageState extends State<ProfileViewPage> {
                   fontSize: 16,
                 ),
               ),
+              child: Text('Edit'),
             ),
           ],
         ),

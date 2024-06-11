@@ -63,9 +63,9 @@ class _TransactionPageState extends State<TransactionPage> {
     try {
       final response = await PaymentApi.initiatePayment(orderId);
       if (response.isSuccess) {
-        final url = response.redirectUrl!;
-        if (await canLaunch(url)) {
-          await launch(url, forceSafariVC: false, forceWebView: false);
+        final Uri url = response.redirectUrl!;
+        if (await canLaunchUrl(url)) {
+          await launchUrl(url);
         } else {
           _showToast('Could not launch payment URL');
         }

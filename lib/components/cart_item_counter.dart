@@ -6,11 +6,11 @@ class CartItemCounter extends StatelessWidget {
   final Function onRemove;
 
   const CartItemCounter({
-    Key? key,
+    super.key,
     required this.quantity,
     required this.onAdd,
     required this.onRemove,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

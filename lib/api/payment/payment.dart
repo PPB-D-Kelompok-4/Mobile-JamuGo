@@ -32,7 +32,7 @@ class PaymentApi {
 
 class PaymentResponse {
   final String? token;
-  final String? redirectUrl;
+  final Uri? redirectUrl;
   final String message;
   final bool isSuccess;
   final int status;
@@ -48,7 +48,7 @@ class PaymentResponse {
   factory PaymentResponse.fromJson(Map<String, dynamic> json) {
     return PaymentResponse(
       token: json['data']['token'],
-      redirectUrl: json['data']['redirect_url'],
+      redirectUrl: Uri.parse(json['data']['redirect_url']),
       message: json['message'],
       isSuccess: json['isSuccess'],
       status: json['status'],
