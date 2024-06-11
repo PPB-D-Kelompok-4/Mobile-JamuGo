@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import 'package:jamugo/api/transaction/transaction.dart';
 import 'package:jamugo/api/payment/payment.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class TransactionPage extends StatefulWidget {
   final int orderId;
+  final String orderPriceTotal;
 
-  const TransactionPage({super.key, required this.orderId});
+  const TransactionPage(
+      {super.key, required this.orderId, required this.orderPriceTotal});
 
   @override
   State<TransactionPage> createState() => _TransactionPageState();
@@ -23,12 +24,6 @@ class _TransactionPageState extends State<TransactionPage> {
   void initState() {
     super.initState();
     transactionFuture = TransactionApi.getTransactionByOrderId(widget.orderId);
-  }
-
-  String _formatDate(String date) {
-    final dateTime = DateTime.parse(date);
-    final format = DateFormat('dd MMMM yyyy HH:mm');
-    return format.format(dateTime);
   }
 
   void _showToast(String message, {Color backgroundColor = Colors.red}) {
@@ -108,49 +103,32 @@ class _TransactionPageState extends State<TransactionPage> {
               child: Text('Transaction details not found'),
             );
           } else {
-            final transaction = snapshot.data!.transactions[0];
             return Center(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  const SizedBox(height: 20),
                   Text(
-                    'Transaction ID: ${transaction.pkid}',
-                    style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    'Order ID: ${transaction.orderPkid}',
-                    style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.w500),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    'Payment Status: ${transaction.paymentStatus}',
-                    style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.w500),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    'Transaction Date: ${_formatDate(transaction.transactionDate)}',
-                    style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.w500),
+                    'Order ID: ${widget.orderId}',
+                    style: const TextStyle(fontSize: 20),
                   ),
                   const SizedBox(height: 10),
+                  Text(
+                    widget.orderPriceTotal,
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 20),
                   const Text(
                     'Choose Payment Method',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
                   ),
                   const SizedBox(height: 5),
-                  DropdownButton<String>(
-                    value: selectedPaymentMethod,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        selectedPaymentMethod = newValue!;
-                      });
-                      _updatePaymentMethod(widget.orderId, newValue!);
-                    },
-                    items: <String>[
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: <String>[
                       'Cash',
                       'Transfer',
                       'QRIS',
@@ -159,12 +137,36 @@ class _TransactionPageState extends State<TransactionPage> {
                       'Dana',
                       'LinkAja',
                       'ShopeePay'
-                    ].map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
+                    ].length,
+                    itemBuilder: (context, index) {
+                      final paymentMethod = <String>[
+                        'Cash',
+                        'Transfer',
+                        'QRIS',
+                        'GoPay',
+                        'OVO',
+                        'Dana',
+                        'LinkAja',
+                        'ShopeePay'
+                      ][index];
+                      return Card(
+                        child: ListTile(
+                          title: Text(paymentMethod),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          tileColor: selectedPaymentMethod == paymentMethod
+                              ? Colors.green
+                              : Colors.white,
+                          onTap: () {
+                            setState(() {
+                              selectedPaymentMethod = paymentMethod;
+                            });
+                            _updatePaymentMethod(widget.orderId, paymentMethod);
+                          },
+                        ),
                       );
-                    }).toList(),
+                    },
                   ),
                   const SizedBox(height: 10),
                   ElevatedButton(

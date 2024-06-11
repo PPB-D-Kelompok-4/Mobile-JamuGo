@@ -319,8 +319,8 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                                     );
                                   } else if (menuSnapshot.hasError) {
                                     return Center(
-                                      child: Text(
-                                          'Error: ${menuSnapshot.error}'),
+                                      child:
+                                          Text('Error: ${menuSnapshot.error}'),
                                     );
                                   } else if (!menuSnapshot.hasData) {
                                     return const Center(
@@ -535,7 +535,10 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                         onPressed: () {
                           GoRouter.of(context).push(
                             '/transaction',
-                            extra: order.pkid,
+                            extra: {
+                              'orderId': order.pkid,
+                              'orderPriceTotal': _formatPrice(order.totalPrice),
+                            },
                           );
                         },
                         style: ElevatedButton.styleFrom(
