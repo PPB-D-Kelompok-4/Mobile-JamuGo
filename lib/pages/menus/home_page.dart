@@ -5,7 +5,8 @@ import 'package:jamugo/api/cart/cart.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jamugo/utils/shared_preferences.dart';
 import 'package:jamugo/components/menu_list_tile.dart';
-import 'package:google_fonts/google_fonts.dart'; // Import Google Fonts
+import 'package:google_fonts/google_fonts.dart';
+import 'package:jamugo/pages/menus/menu_detail_modal.dart'; // Import MenuDetailModal
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -142,6 +143,26 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  void _showMenuDetailModal(BuildContext context, int menuId) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => DraggableScrollableSheet(
+        expand: false,
+        initialChildSize: 0.7,
+        minChildSize: 0.5,
+        maxChildSize: 0.9,
+        builder: (context, scrollController) => SingleChildScrollView(
+          controller: scrollController,
+          child: MenuDetailModal(menuId: menuId),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -201,28 +222,32 @@ class _HomePageState extends State<HomePage> {
                   int quantity =
                       cartQuantities[menu.pkid] ?? 0; // Default quantity is 0
 
-                  return MenuListTile(
-                    menu: menu,
-                    quantity: quantity,
-                    onAdd: () {
-                      setState(() {
-                        quantity++;
-                        cartQuantities[menu.pkid] = quantity;
-                      });
-                      _updateCart(menu.pkid, quantity);
-                    },
-                    onRemove: () {
-                      setState(() {
-                        if (quantity > 0) {
-                          quantity--;
+                  return GestureDetector(
+                    onTap: () => _showMenuDetailModal(context, menu.pkid),
+                    child: MenuListTile(
+                      menu: menu,
+                      quantity: quantity,
+                      onAdd: () {
+                        setState(() {
+                          quantity++;
                           cartQuantities[menu.pkid] = quantity;
-                        }
-                      });
-                      _updateCart(menu.pkid, quantity);
-                    },
-                    role: role,
-                    refreshMenus: _refreshMenus,
-                    showDeleteConfirmationDialog: _showDeleteConfirmationDialog,
+                        });
+                        _updateCart(menu.pkid, quantity);
+                      },
+                      onRemove: () {
+                        setState(() {
+                          if (quantity > 0) {
+                            quantity--;
+                            cartQuantities[menu.pkid] = quantity;
+                          }
+                        });
+                        _updateCart(menu.pkid, quantity);
+                      },
+                      role: role,
+                      refreshMenus: _refreshMenus,
+                      showDeleteConfirmationDialog:
+                          _showDeleteConfirmationDialog,
+                    ),
                   );
                 },
               );
