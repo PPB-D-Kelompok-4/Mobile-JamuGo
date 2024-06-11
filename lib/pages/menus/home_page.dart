@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:jamugo/utils/shared_preferences.dart';
 import 'package:jamugo/components/menu_list_tile.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:jamugo/pages/menus/menu_detail_modal.dart'; // Import MenuDetailModal
+import 'package:jamugo/pages/menus/menu_detail_modal.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -20,14 +20,14 @@ class _HomePageState extends State<HomePage> {
   String role = '';
   String name = '';
   Map<int, int> cartQuantities =
-      {}; // Map to store the quantities of items in the cart
+      {};
 
   @override
   void initState() {
     super.initState();
     menus = _getMenus();
     getUserData();
-    _getCartData(); // Fetch cart data on initialization
+    _getCartData();
   }
 
   Future<void> getUserData() async {
@@ -170,7 +170,7 @@ class _HomePageState extends State<HomePage> {
         title: Text(
           'Halo, $name',
           style: GoogleFonts.poppins(
-              fontWeight: FontWeight.w400), // Use Google Fonts for title
+              fontWeight: FontWeight.w400),
         ),
         actions: role == 'customer'
             ? [
@@ -178,7 +178,7 @@ class _HomePageState extends State<HomePage> {
                   icon: const Icon(Icons.shopping_cart),
                   onPressed: () {
                     GoRouter.of(context)
-                        .push('/cart'); // Navigate to Cart Detail Page
+                        .push('/cart');
                   },
                 ),
               ]
@@ -220,7 +220,7 @@ class _HomePageState extends State<HomePage> {
                 itemBuilder: (context, index) {
                   final menu = snapshot.data![index];
                   int quantity =
-                      cartQuantities[menu.pkid] ?? 0; // Default quantity is 0
+                      cartQuantities[menu.pkid] ?? 0;
 
                   return GestureDetector(
                     onTap: () => _showMenuDetailModal(context, menu.pkid),
